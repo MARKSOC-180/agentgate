@@ -1,0 +1,22 @@
+{
+  "spec": "MCP-SP/0.2",
+  "level": 2,
+  "level_name": "Governed",
+  "passed": [
+    "§3 Audit-record schema: all required fields present",
+    "§2.1 Policy: every record carries a decision of allow|block",
+    "§2.2 Redaction: every record records redaction hits",
+    "§2.6 Tamper-evident audit: chain intact, 4 records, no tampering",
+    "§2.10 Identity & delegation: 4 record(s) carry a consistent identity/delegation context",
+    "§2.4/§2.5 Limits & approval: 2 limits well-formed",
+    "§2.3 Safety: every record carries a safety findings field"
+  ],
+  "failed": [
+    "§2.7 External anchoring: anchors file is empty; Level 3 requires at least one verified anchor"
+  ],
+  "declared": {
+    "selfHosted": true
+  },
+  "badge": "[![MCP-SP](https://img.shields.io/badge/MCP--SP-Level%202-blue)](https://github.com/agentgate/agentgate/blob/main/SPEC.md)",
+  "audit_path": "agentgate_audit.ndjson"
+}

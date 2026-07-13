@@ -1,0 +1,48 @@
+{
+  "_comment": "AgentGate MCP 代理完整示例 — Cursor/Claude Desktop 指向: agentgate proxy --config 本文件",
+
+  "command": "python",
+  "args": ["mock_mcp_server.py"],
+  "principal": "cursor-desktop",
+  "pre_authorized_tools": ["read_customer_record", "web_search"],
+
+  "policy": {
+    "deny_tools": ["shell_exec"],
+    "require_auth_tools": ["issue_refund", "delete_records"],
+    "destructive_tools": ["delete_records", "drop_table", "issue_refund"],
+    "require_approval_tools": ["delete_records"],
+    "allow_destructive": false,
+    "tool_scopes": {
+      "issue_refund": ["refund:create"]
+    }
+  },
+
+  "identity": {
+    "principal": { "id": "agent-csr", "type": "agent", "grants": ["read:customer", "refund:create"] },
+    "on_behalf_of": [{ "id": "user-42", "type": "user", "grants": ["read:customer"] }]
+  },
+
+  "audit_path": "agentgate_audit.ndjson",
+  "trace_path": "agentgate_trace.ndjson",
+  "anchor_path": "agentgate_anchors.ndjson",
+  "anchor_every": 25,
+  "approvals_path": "agentgate_approvals.json",
+  "mcp_sp_level": 3,
+  "http": { "host": "127.0.0.1", "port": 9470 },
+
+  "limits": {
+    "max_calls_total": 10000,
+    "per_tool": {
+      "delete_records": { "max_calls": 5, "window": 60 }
+    }
+  },
+
+  "alerts": {
+    "on": ["block", "critical"]
+  },
+
+  "pricing": { "price_per_call": 0.002, "included_calls": 1000, "currency": "USD" },
+  "usage_path": "agentgate_usage.ndjson",
+  "intel": true,
+  "intel_path": "agentgate_intel.ndjson"
+}

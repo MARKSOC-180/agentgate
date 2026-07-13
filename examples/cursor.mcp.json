@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "my-tools-governed": {
+      "command": "agentgate",
+      "args": ["proxy", "--config", "${workspaceFolder}/agentgate.config.json"],
+      "env": {
+        "PYTHONUTF8": "1"
+      }
+    }
+  }
+}

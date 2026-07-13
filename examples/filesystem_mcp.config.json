@@ -1,0 +1,34 @@
+{
+  "_comment": "把 AgentGate 挡在官方 filesystem MCP server 前面的示例配置。把 ./sandbox 换成你想授权访问的目录。需要本机有 Node/npx。",
+
+  "command": "npx -y @modelcontextprotocol/server-filesystem ./sandbox",
+
+  "principal": "cursor-desktop",
+
+  "pre_authorized_tools": [
+    "read_file", "read_multiple_files", "list_directory",
+    "search_files", "get_file_info", "list_allowed_directories"
+  ],
+
+  "policy": {
+    "deny_tools": [],
+    "require_approval_tools": ["write_file", "edit_file", "move_file"],
+    "destructive_tools": ["write_file", "edit_file", "move_file", "create_directory"],
+    "allow_destructive": false
+  },
+
+  "limits": {
+    "default_rate": { "max_calls": 120, "window": 60 },
+    "per_tool": {
+      "write_file": { "max_calls": 20, "window": 60 },
+      "edit_file": { "max_calls": 20, "window": 60 }
+    }
+  },
+
+  "alerts": {
+    "on": ["block", "critical"]
+  },
+
+  "audit_path": "agentgate_audit.ndjson",
+  "trace_path": "agentgate_trace.ndjson"
+}

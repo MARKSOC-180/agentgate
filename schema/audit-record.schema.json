@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentgate.dev/schema/audit-record.schema.json",
+  "title": "MCP-SP Audit Record",
+  "description": "One hash-chained audit record per MCP tool call (MCP-SP SPEC §3).",
+  "type": "object",
+  "required": [
+    "ts", "tool", "principal", "decision", "reasons",
+    "redaction_hits", "input_sha256", "output_sha256",
+    "prev_hash", "this_hash"
+  ],
+  "properties": {
+    "ts": { "type": "number", "description": "Unix timestamp (seconds)" },
+    "tool": { "type": "string" },
+    "principal": { "type": ["string", "null"] },
+    "decision": { "enum": ["allow", "block"] },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "redaction_hits": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+    "safety": { "type": "array", "items": { "type": "string" } },
+    "input_sha256": { "type": "string" },
+    "output_sha256": { "type": "string" },
+    "duration_ms": { "type": "number" },
+    "prev_hash": { "type": "string" },
+    "this_hash": { "type": "string" },
+    "identity": {
+      "type": "object",
+      "required": ["subject", "actor", "delegation", "granted"],
+      "properties": {
+        "subject": { "type": "string" },
+        "actor": { "type": "string" },
+        "delegation": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "granted": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "checked": { "type": "boolean" },
+        "cost": { "type": "number" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["id", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "enum": ["pending", "approved", "denied"] }
+      }
+    }
+  },
+  "additionalProperties": true
+}

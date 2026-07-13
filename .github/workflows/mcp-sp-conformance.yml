@@ -1,0 +1,45 @@
+name: MCP-SP Conformance
+
+# The standard gets its own named check. It proves two things on every push:
+#  1) the standalone, zero-dependency validator agrees with the conformance vectors;
+#  2) the reference implementation genuinely reaches MCP-SP Level 3, as judged by
+#     that independent validator (dogfood) — not by its own internal code.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install reference implementation
+        run: pip install -e ".[dev]"
+
+      - name: Regenerate conformance vectors
+        run: python mcp-sp/make_vectors.py
+
+      - name: Standalone validator agrees with vectors + AgentGate
+        run: python -m pytest -q tests/test_mcp_sp_standalone.py
+
+      - name: The standard ships as its own pip-installable package
+        run: |
+          pip install build
+          python -m build mcp-sp
+          pip install mcp-sp/dist/*.whl
+          mcp-sp mcp-sp/conformance_vectors/valid_level2.ndjson --require 2
+
+      - name: Dogfood — reference impl must reach Level 3 (judged by the standalone validator)
+        run: |
+          python demo.py > /dev/null
+          agentgate anchor agentgate_audit.ndjson --out ci_anchors.ndjson
+          python mcp-sp/mcp_sp.py agentgate_audit.ndjson --anchors ci_anchors.ndjson --require 3
+
+      - name: TypeScript validator agrees with vectors (Node)
+        run: python -m pytest -q tests/test_ts_validator.py

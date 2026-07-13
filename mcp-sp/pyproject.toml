@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcp-sp"
+version = "0.2.0"
+description = "MCP Security Profile (MCP-SP) — single-file, zero-dependency reference validator for securing, governing, and auditing Model Context Protocol tool calls."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache-2.0" }
+keywords = ["mcp", "model-context-protocol", "ai-agents", "security", "governance", "audit", "conformance"]
+authors = [{ name = "MCP-SP authors" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/agentgate/agentgate"
+Specification = "https://github.com/agentgate/agentgate/blob/main/SPEC.md"
+Source = "https://github.com/agentgate/agentgate/tree/main/mcp-sp"
+
+[project.scripts]
+mcp-sp = "mcp_sp:main"
+
+[tool.hatch.build.targets.wheel]
+include = ["mcp_sp.py"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "mcp_sp.py",
+    "make_vectors.py",
+    "README.md",
+    "conformance_vectors/",
+]

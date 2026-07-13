@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# AgentGate 运行时产物(不应入库)
+agentgate_audit.ndjson
+agentgate_trace.ndjson
+agentgate_report.html
+agentgate_approvals.json
+agentgate_anchors.ndjson
+agentgate_usage.ndjson
+agentgate_intel.ndjson
+ci_anchors.ndjson
+compliance_export/
+data/
+invoice.csv
+feed.json
+*.tmp
+
+# 内部 go-to-market 文档(不公开)
+发布包_上线即用.md
+大客户作战包.md
+docs/PILOT.md
+docs/PILOT_TARGETS.md
+docs/OUTREACH_READY_TO_SEND.md

@@ -1,0 +1,22 @@
+{
+  "_comment": "MCP filesystem server — read-only, no shell, PII redaction on by default",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-filesystem", "/workspace"],
+  "audit_path": "agentgate_audit.ndjson",
+  "trace_path": "agentgate_trace.ndjson",
+  "anchor_path": "agentgate_anchors.ndjson",
+  "anchor_every": 100,
+  "mcp_sp_level": 3,
+  "policy": {
+    "deny_tools": ["write_file", "edit_file", "create_directory", "move_file", "shell_exec"],
+    "destructive_tools": ["delete_file", "delete_directory"],
+    "require_approval_tools": ["delete_file"]
+  },
+  "limits": {
+    "max_calls_total": 500,
+    "per_tool": {
+      "read_file": { "max_calls": 200, "window": 60 },
+      "list_directory": { "max_calls": 100, "window": 60 }
+    }
+  }
+}

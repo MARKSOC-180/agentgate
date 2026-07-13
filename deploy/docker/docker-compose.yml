@@ -1,0 +1,30 @@
+# AgentGate MCP proxy sidecar — drop-in in front of any MCP server.
+# Usage: docker compose -f deploy/docker/docker-compose.yml up
+services:
+  agentgate:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    image: agentgate:0.2
+    stdin_open: true
+    tty: true
+    ports:
+      - "9470:9470"
+    volumes:
+      - agentgate-data:/data
+      - ./example.config.json:/data/config.json:ro
+    environment:
+      PYTHONUTF8: "1"
+    command: ["agentgate", "proxy", "--config", "/data/config.json"]
+
+  # Example: mock downstream for smoke test
+  mock-only:
+    profiles: ["demo"]
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
+    command: ["python", "demo_mcp.py"]
+    stdin_open: true
+
+volumes:
+  agentgate-data:

@@ -1,0 +1,22 @@
+{
+  "_comment": "MCP Postgres — SELECT only by default; writes/destructive need approval",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"],
+  "audit_path": "agentgate_audit.ndjson",
+  "anchor_path": "agentgate_anchors.ndjson",
+  "anchor_every": 50,
+  "policy": {
+    "deny_tools": ["execute_ddl", "drop_table"],
+    "destructive_tools": ["execute_write", "delete_rows"],
+    "require_auth_tools": ["execute_write"],
+    "require_approval_tools": ["delete_rows", "execute_write"],
+    "tool_scopes": {
+      "execute_write": ["db:write"],
+      "delete_rows": ["db:delete"]
+    }
+  },
+  "identity": {
+    "principal": { "id": "agent-db", "type": "agent", "grants": ["db:read", "db:write"] },
+    "on_behalf_of": [{ "id": "service-account", "type": "service", "grants": ["db:read"] }]
+  }
+}

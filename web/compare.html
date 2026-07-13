@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AgentGate vs 裸 MCP — 对比</title>
+<style>
+:root{--bg:#0a0b10;--txt:#e7eaf3;--dim:#8b90a6;--red:#ff5d6c;--grn:#39d98a;--line:#222637}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:32px 20px}
+h1{font-size:26px}table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:12px;text-align:left}
+th{background:#12141c}.yes{color:var(--grn);font-weight:700}.no{color:var(--red);font-weight:700}
+a{color:#5aa9ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>裸 MCP server vs AgentGate + MCP-SP Level 3</h1>
+<p style="color:var(--dim)">企业落地 AI agent 工具调用时的控制面对比。</p>
+<table>
+<tr><th>能力</th><th>裸 MCP</th><th>AgentGate</th></tr>
+<tr><td>策略 / 白名单 / 急停</td><td class="no">✕</td><td class="yes">✓ policy + kill-switch</td></tr>
+<tr><td>密钥 / PII 双向脱敏</td><td class="no">✕</td><td class="yes">✓ 含中国区 PII</td></tr>
+<tr><td>注入 / 破坏性操作检测</td><td class="no">✕</td><td class="yes">✓ safety 扫描</td></tr>
+<tr><td>人在环审批</td><td class="no">✕</td><td class="yes">✓ approval + 审计 approval 字段</td></tr>
+<tr><td>限流 / 预算</td><td class="no">✕</td><td class="yes">✓ limits + 审计 limits 字段</td></tr>
+<tr><td>身份 / 委托衰减</td><td class="no">✕</td><td class="yes">✓ MCP-SP §2.10</td></tr>
+<tr><td>不可篡改审计链</td><td class="no">✕</td><td class="yes">✓ hash chain + verify()</td></tr>
+<tr><td>外部锚定(防管理员改历史)</td><td class="no">✕</td><td class="yes">✓ anchoring + webhook</td></tr>
+<tr><td>按调用计费 / 威胁情报</td><td class="no">✕</td><td class="yes">✓ metering + intel flywheel</td></tr>
+<tr><td>自托管 / 零 egress</td><td class="yes">✓*</td><td class="yes">✓ 默认</td></tr>
+<tr><td>标准自证 (MCP-SP badge)</td><td class="no">✕</td><td class="yes">✓ pip install mcp-sp</td></tr>
+</table>
+<p><a href="danger.html">▶ 30 秒动画演示</a> · <a href="audit.html">审计链查看器</a> · <a href="https://github.com/agentgate/agentgate">GitHub</a></p>
+</div>
+</body>
+</html>

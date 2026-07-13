@@ -1,0 +1,6 @@
+# AgentGate 核心：零外部依赖，仅需 Python 3.9+ 标准库。
+# 自托管、无供应链风险、谁的墙内都能跑——这本身就是卖点。
+#
+# 可选(仅当你要接真实 OTel 后端或把网关挂成 HTTP/MCP 代理时)：
+# opentelemetry-sdk>=1.20
+# fastapi>=0.110        # 若要以 HTTP 代理形式部署

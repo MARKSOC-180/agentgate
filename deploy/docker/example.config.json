@@ -1,0 +1,15 @@
+{
+  "command": "python",
+  "args": ["mock_mcp_server.py"],
+  "audit_path": "/data/audit.ndjson",
+  "trace_path": "/data/trace.ndjson",
+  "anchor_path": "/data/anchors.ndjson",
+  "anchor_every": 50,
+  "mcp_sp_level": 3,
+  "http": { "host": "0.0.0.0", "port": 9470 },
+  "policy": {
+    "deny_tools": ["shell_exec"],
+    "destructive_tools": ["delete_records"],
+    "require_approval_tools": ["delete_records"]
+  }
+}

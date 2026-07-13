@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentgate"
+version = "0.2.0"
+description = "A self-hosted control plane for AI agents: policy, secret/PII redaction, dangerous-action blocking, and a tamper-evident audit log on every tool call. Zero deps, zero data egress."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache-2.0" }
+keywords = ["ai-agents", "mcp", "llm", "ai-security", "observability",
+            "guardrails", "self-hosted", "audit-log", "llmops"]
+authors = [{ name = "AgentGate" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []  # 零运行时依赖：纯标准库
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "jsonschema>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/agentgate/agentgate"
+Issues = "https://github.com/agentgate/agentgate/issues"
+Documentation = "https://github.com/agentgate/agentgate/tree/main/docs"
+
+[project.scripts]
+agentgate = "agentgate.cli:main"
+
+[tool.setuptools]
+packages = ["agentgate"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

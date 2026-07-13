@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.8", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install (editable) + dev deps
+        run: pip install -e ".[dev]" jsonschema
+      - name: Regenerate & validate MCP-SP vectors
+        run: |
+          python mcp-sp/make_vectors.py
+          python -m pytest -q tests/test_mcp_sp_standalone.py
+      - name: Validate audit records against JSON Schema
+        run: |
+          python -c "
+          import json, glob
+          from jsonschema import Draft202012Validator
+          schema=json.load(open('schema/audit-record.schema.json'))
+          v=Draft202012Validator(schema)
+          for p in glob.glob('mcp-sp/conformance_vectors/*.ndjson'):
+              if 'anchor' in p: continue
+              for line in open(p,encoding='utf-8'):
+                  if line.strip(): v.validate(json.loads(line))
+          print('audit schema OK')
+          anchor_schema=json.load(open('schema/anchor-record.schema.json'))
+          av=Draft202012Validator(anchor_schema)
+          for p in glob.glob('mcp-sp/conformance_vectors/*.anchors.ndjson'):
+              for line in open(p,encoding='utf-8'):
+                  if line.strip(): av.validate(json.loads(line))
+          print('anchor schema OK')
+          "
+      - name: Policy template smoke
+        run: python -m pytest -q tests/test_policy_templates.py
+      - name: E2E demo smoke
+        run: python -m pytest -q tests/test_demo_mcp.py tests/test_mcp_proxy_advanced.py tests/test_http_sidecar.py
+      - name: Run test suite
+        run: python -m pytest -q --cov=agentgate --cov-report=term-missing

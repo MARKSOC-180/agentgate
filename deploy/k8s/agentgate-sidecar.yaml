@@ -1,0 +1,71 @@
+# AgentGate as an MCP stdio sidecar (conceptual — wire to your MCP host's pod spec).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentgate-policy
+data:
+  config.json: |
+    {
+      "command": "python",
+      "args": ["-m", "your_mcp_server"],
+      "audit_path": "/data/audit.ndjson",
+      "trace_path": "/data/trace.ndjson",
+      "anchor_path": "/data/anchors.ndjson",
+      "anchor_every": 50,
+      "mcp_sp_level": 3,
+      "http": { "host": "0.0.0.0", "port": 9470 },
+      "policy": {
+        "deny_tools": ["shell_exec"],
+        "destructive_tools": ["delete_records"],
+        "require_approval_tools": ["delete_records"]
+      }
+    }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agentgate-audit
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mcp-with-agentgate
+spec:
+  containers:
+    - name: agentgate
+      image: agentgate:0.2
+      command: ["agentgate", "proxy", "--config", "/config/config.json"]
+      stdin: true
+      tty: true
+      volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: audit
+          mountPath: /data
+      ports:
+        - containerPort: 9470
+          name: http
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: http
+        initialDelaySeconds: 5
+        periodSeconds: 15
+      readinessProbe:
+        httpGet:
+          path: /conformance?require=2
+          port: http
+        initialDelaySeconds: 8
+        periodSeconds: 30
+  volumes:
+    - name: config
+      configMap:
+        name: agentgate-policy
+    - name: audit
+      persistentVolumeClaim:
+        claimName: agentgate-audit

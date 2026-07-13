@@ -1,0 +1,15 @@
+{
+  "_comment": "Maximum lockdown — deny shell/RCE tools entirely",
+  "command": "python",
+  "args": ["-m", "your_mcp_server"],
+  "policy": {
+    "deny_tools": ["shell_exec", "run_command", "bash", "powershell", "execute_script"],
+    "killswitch": false
+  },
+  "alerts": {
+    "webhook": null,
+    "on": ["block", "critical"],
+    "timeout": 5.0
+  },
+  "intel": true
+}

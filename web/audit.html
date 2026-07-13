@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AgentGate — MCP 审计链查看器</title>
+<meta property="og:title" content="AgentGate audit viewer"/>
+<style>
+:root{--bg:#0a0b10;--panel:#12141c;--line:#222637;--txt:#e7eaf3;--dim:#8b90a6;--grn:#39d98a;--red:#ff5d6c;--mono:ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:24px}
+h1{font-size:22px}input[type=file]{margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--mono)}
+th,td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{background:var(--panel)}.allow{color:var(--grn)}.block{color:var(--red)}
+.verdict{padding:10px;border-radius:8px;margin:12px 0;font-weight:700}
+.pass{background:#103a2a;color:var(--grn)}.fail{background:#3a1018;color:var(--red)}
+a{color:#5aa9ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⛓ MCP-SP 审计链查看器</h1>
+  <p style="color:var(--dim)">拖入 <code>*.ndjson</code> 审计日志 — 完全在浏览器本地校验哈希链 + §2.10 身份（与 Python 参考实现 canonical 一致）。</p>
+  <input type="file" id="f" accept=".ndjson,.json,.txt"/>
+  <div id="verdict"></div>
+  <div id="table"></div>
+  <p style="color:var(--dim);font-size:13px;margin-top:24px">
+    <a href="index.html">← 现场演示</a> ·
+    <a href="compare.html">对比页</a> ·
+    <a href="https://github.com/agentgate/agentgate">AgentGate</a>
+  </p>
+</div>
+<script>
+async function sha(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function sortDeep(v){
+  if(Array.isArray(v)) return v.map(sortDeep);
+  if(v&&typeof v==='object'){
+    const o=v,out={};
+    for(const k of Object.keys(o).sort()) out[k]=sortDeep(o[k]);
+    return out;
+  }
+  return v;
+}
+function serialize(v,decimalPaths,path=''){
+  if(v===null) return 'null';
+  if(typeof v==='boolean') return v?'true':'false';
+  if(typeof v==='number'){
+    if(decimalPaths.has(path)&&Number.isInteger(v)) return `${v}.0`;
+    return String(v);
+  }
+  if(typeof v==='string') return JSON.stringify(v);
+  if(Array.isArray(v)) return '['+v.map((x,i)=>serialize(x,decimalPaths,`${path}[${i}]`)).join(', ')+']';
+  if(typeof v==='object'){
+    const o=v;
+    return '{'+Object.keys(o).sort()
+      .map(k=>JSON.stringify(k)+': '+serialize(o[k],decimalPaths,path?`${path}.${k}`:k)).join(', ')+'}';
+  }
+  return JSON.stringify(String(v));
+}
+function canonical(body,decimalPaths){ return serialize(sortDeep(body),decimalPaths); }
+function floatDecimalPaths(raw){
+  const paths=new Set(),stack=[];
+  let i=0;
+  const ws=()=>{while(i<raw.length&&/\s/.test(raw[i]))i++;};
+  const readStr=()=>{i++;const s=i;while(i<raw.length&&raw[i]!=='"'){if(raw[i]==='\\')i++;i++;}const t=raw.slice(s,i);i++;return t;};
+  const readNum=()=>{const s=i;if(raw[i]==='-')i++;while(i<raw.length&&/[\d.]/.test(raw[i]))i++;
+    if(i<raw.length&&(raw[i]==='e'||raw[i]==='E')){i++;if(raw[i]==='+'||raw[i]==='-')i++;while(i<raw.length&&/\d/.test(raw[i]))i++;}
+    return raw.slice(s,i);};
+  const skipVal=()=>{ws();const c=raw[i];
+    if(c==='"'){readStr();return;}
+    if(c==='{'){stack.push('__obj__');i++;while(raw[i]!=='}')parseEntry();i++;stack.pop();return;}
+    if(c==='['){i++;ws();while(raw[i]!==']'){skipVal();ws();if(raw[i]===',')i++;ws();}i++;return;}
+    if(c==='t'){i+=4;return;} if(c==='f'){i+=5;return;} if(c==='n'){i+=4;return;}
+    readNum();};
+  const parseEntry=()=>{ws();if(raw[i]==='}')return;const key=readStr();ws();i++;ws();
+    const child=[...stack.filter(s=>s!=='__obj__'&&s!=='__arr__'),key].join('.');
+    const c=raw[i];
+    if(c==='{'){stack.push(key);i++;while(raw[i]!=='}'){parseEntry();ws();if(raw[i]===',')i++;}i++;stack.pop();}
+    else if(c==='[')skipVal();
+    else if(c==='"')readStr();
+    else if(c==='t'||c==='f'||c==='n')skipVal();
+    else{const lit=readNum();if(/^-?\d+\.0+$/.test(lit))paths.add(child);}};
+  ws();if(raw[i]==='{'){i++;while(raw[i]!=='}'){parseEntry();ws();if(raw[i]===',')i++;}}
+  return paths;
+}
+async function verify(lines){
+  let prev='GENESIS',ok=true,msg='';
+  for(let i=0;i<lines.length;i++){
+    const raw=lines[i],r=JSON.parse(raw),body={...r};delete body.this_hash;
+    const dp=floatDecimalPaths(raw);
+    if(body.prev_hash!==prev){ok=false;msg=`#${i+1} 链断裂`;break;}
+    if(await sha(prev+'|'+canonical(body,dp))!==r.this_hash){ok=false;msg=`#${i+1} 哈希不匹配`;break;}
+    prev=r.this_hash;
+  }
+  return [ok,ok?`${lines.length} 条记录完好`:msg];
+}
+function checkId(r,i){
+  const id=r.identity;if(!id)return null;
+  const c=id.delegation||[];
+  if(id.actor!==c[0])return `#${i+1} actor≠delegation[0]`;
+  if(id.subject!==c[c.length-1])return `#${i+1} subject≠链尾`;
+  return null;
+}
+document.getElementById('f').onchange=async e=>{
+  const t=await e.target.files[0].text();
+  const lines=t.split('\n').filter(Boolean);
+  const recs=lines.map(l=>JSON.parse(l));
+  const [ok,msg]=await verify(lines);
+  let idErr=null;
+  recs.forEach((r,i)=>{idErr=idErr||checkId(r,i+1)});
+  const v=document.getElementById('verdict');
+  v.className='verdict '+(ok&&!idErr?'pass':'fail');
+  v.textContent=(ok&&!idErr?'✓ 链校验通过':'✕ '+(idErr||msg));
+  let h='<table><tr><th>#</th><th>tool</th><th>decision</th><th>approval</th><th>principal</th><th>subject</th><th>hash</th></tr>';
+  recs.forEach((r,i)=>{
+    const appr=(r.approval&&r.approval.status)||'—';
+    h+=`<tr><td>${i+1}</td><td>${r.tool}</td><td class="${r.decision}">${r.decision}</td><td>${appr}</td><td>${r.principal||''}</td><td>${(r.identity&&r.identity.subject)||'—'}</td><td>${(r.this_hash||'').slice(0,16)}…</td></tr>`;
+  });
+  document.getElementById('table').innerHTML=h+'</table>';
+};
+</script>
+</body>
+</html>

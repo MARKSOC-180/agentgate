@@ -1,0 +1,54 @@
+{
+  "valid_level1.ndjson": {
+    "anchors": null,
+    "expected_level": 1
+  },
+  "valid_level2.ndjson": {
+    "anchors": null,
+    "expected_level": 2
+  },
+  "valid_level3.audit.ndjson": {
+    "anchors": "valid_level3.anchors.ndjson",
+    "expected_level": 3
+  },
+  "tampered.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  },
+  "missing_field.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  },
+  "bad_anchor.audit.ndjson": {
+    "anchors": "bad_anchor.anchors.ndjson",
+    "expected_level": 2
+  },
+  "valid_identity_level2.ndjson": {
+    "anchors": null,
+    "expected_level": 2
+  },
+  "bad_identity.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  },
+  "valid_identity_triple_level2.ndjson": {
+    "anchors": null,
+    "expected_level": 2
+  },
+  "bad_identity_triple.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  },
+  "valid_governed_extensions_level2.ndjson": {
+    "anchors": null,
+    "expected_level": 2
+  },
+  "bad_limits.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  },
+  "bad_approval.ndjson": {
+    "anchors": null,
+    "expected_level": 0
+  }
+}
