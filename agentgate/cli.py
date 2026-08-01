@@ -168,11 +168,33 @@ def _cmd_version(_args) -> int:
     return 0
 
 
+def _cmd_start(args) -> int:
+    """一个动作开始：生成配置 + Cursor 片段 + 下一步（藏起其余复杂度）。"""
+    from .onboard import ensure_config, write_cursor_snippet, print_start_card
+
+    cfg, created = ensure_config(args.config, downstream=args.downstream)
+    snippet = write_cursor_snippet(cfg, args.snippet)
+    print_start_card(cfg, snippet, created)
+    if args.run:
+        from .mcp_proxy import main as proxy_main
+        return proxy_main(["--config", cfg])
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="agentgate",
-        description="自托管的 AI Agent 控制平面：策略 · 脱敏 · 危险动作拦截 · 哈希链审计。")
+        description="AgentGate — protect every tool call. On your machine.")
     sub = p.add_subparsers(dest="command", required=True)
+
+    ss = sub.add_parser("start", help="One step: create config + Cursor snippet (Jobs-simple)")
+    ss.add_argument("--config", default="agentgate.config.json", help="config path")
+    ss.add_argument("--downstream", default=None,
+                    help='your MCP server command, e.g. "python my_server.py"')
+    ss.add_argument("--snippet", default="cursor.mcp.snippet.json",
+                    help="Cursor MCP snippet output path")
+    ss.add_argument("--run", action="store_true", help="start proxy immediately after init")
+    ss.set_defaults(func=_cmd_start)
 
     sp = sub.add_parser("proxy", help="把控制平面挡在任意 MCP server 前(stdio 代理)")
     sp.add_argument("--config", help="JSON 配置文件路径")

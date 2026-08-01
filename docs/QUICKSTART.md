@@ -1,35 +1,24 @@
-# Quickstart
+# Start
 
 ```bash
 pip install -e .
-python demo.py                    # library mode
-python demo_mcp.py                # MCP proxy + mock server
-agentgate verify agentgate_audit.ndjson
-agentgate conformance agentgate_audit.ndjson --require 2
+agentgate start
 ```
 
-## Drop-in MCP proxy
+That creates `agentgate.config.json` and a Cursor MCP snippet.
 
-Point your MCP host at AgentGate instead of the raw server:
-
-```json
-{
-  "mcpServers": {
-    "my-tools": {
-      "command": "agentgate",
-      "args": ["proxy", "--config", "/path/to/agentgate.config.json"]
-    }
-  }
-}
-```
-
-See [policy-templates/](../policy-templates/) for starter configs.
-
-## MCP-SP self-certify
+Point the config at your real MCP server (`--downstream "…"`), then:
 
 ```bash
-pip install mcp-sp
-mcp-sp agentgate_audit.ndjson --anchors agentgate_anchors.ndjson --require 3
+agentgate proxy --config agentgate.config.json
 ```
 
-Spec: [SPEC.md](../SPEC.md) · Implementers: [mcp-sp/IMPLEMENTERS.md](../mcp-sp/IMPLEMENTERS.md)
+Or one shot:
+
+```bash
+agentgate start --downstream "python my_mcp_server.py" --run
+```
+
+Feel it in the browser: [start.html](../web/start.html) · [danger.html](../web/danger.html)
+
+Everything else (export, conformance, approvals) is there when you need it — not before.

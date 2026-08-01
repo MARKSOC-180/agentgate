@@ -80,13 +80,30 @@ def main() -> int:
         f.write("Contents:\n")
         f.write(f"  - compliance_export/  (MD, CSV, JSON, CEF)\n")
         f.write(f"  - agentgate_report.html\n")
-        f.write(f"  - mcp_sp_conformance.json\n\n")
+        f.write(f"  - mcp_sp_conformance.json\n")
+        f.write(f"  - vendor_security_unblock/  (questionnaire drafts + evidence map)\n\n")
         f.write("Acceptance checklist:\n")
         f.write(f"  [{'x' if ok_chain else ' '}] Hash chain verify PASS\n")
         f.write(f"  [{'x' if args.anchors else ' '}] External anchors provided\n")
         f.write(f"  [{'x' if res.get('level',0)>=3 else ' '}] MCP-SP Level >= 3\n")
         f.write(f"  [x] Compliance export (4 formats)\n")
         f.write(f"  [x] HTML executive report\n")
+        f.write(f"  [x] Vendor security unblock templates\n")
+
+    pack_src = os.path.join(ROOT, "packs", "vendor_security_unblock")
+    pack_dst = os.path.join(out, "vendor_security_unblock")
+    if os.path.isdir(pack_src):
+        if os.path.isdir(pack_dst):
+            shutil.rmtree(pack_dst)
+        shutil.copytree(pack_src, pack_dst)
+        # light personalization marker in QUESTION_BANK
+        qb = os.path.join(pack_dst, "QUESTION_BANK.md")
+        if os.path.isfile(qb):
+            with open(qb, encoding="utf-8") as rf:
+                body = rf.read()
+            body = body.replace("{COMPANY}", args.customer)
+            with open(qb, "w", encoding="utf-8") as wf:
+                wf.write(body)
 
     print(f"交付包已生成：{out}")
     print(f"  合规导出：{comp_dir}")

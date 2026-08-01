@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AgentGate</title>
+<meta name="description" content="Protect every tool call. On your machine. Provable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#0c0d10; --paper:#f3efe6; --mute:#6b6560; --line:rgba(12,13,16,.12);
+  --accent:#1a6b4a; --danger:#b33b3b; --glow:rgba(26,107,74,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper)}
+body{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  background:
+    radial-gradient(1000px 700px at 70% -10%, rgba(243,239,230,.09), transparent 55%),
+    radial-gradient(800px 500px at 0% 80%, var(--glow), transparent 50%),
+    linear-gradient(165deg, #12141a 0%, #0c0d10 45%, #0a1210 100%);
+}
+.stage{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,6vw,72px);max-width:1100px;margin:0 auto;position:relative}
+.brand{
+  font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(56px,12vw,120px);
+  line-height:.92;letter-spacing:-.04em;margin:0 0 18px;
+  animation:rise .9s cubic-bezier(.2,.8,.2,1) both;
+}
+.line{
+  font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:clamp(22px,3.6vw,36px);
+  line-height:1.25;max-width:16ch;margin:0 0 16px;color:rgba(243,239,230,.92);
+  animation:rise .9s .08s cubic-bezier(.2,.8,.2,1) both;
+}
+.sub{color:var(--mute);font-size:14px;max-width:36em;line-height:1.55;margin:0 0 34px;
+  animation:rise .9s .16s cubic-bezier(.2,.8,.2,1) both}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  animation:rise .9s .24s cubic-bezier(.2,.8,.2,1) both}
+.btn{
+  appearance:none;border:0;cursor:pointer;text-decoration:none;font:inherit;font-weight:500;
+  padding:14px 22px;border-radius:999px;background:var(--paper);color:var(--ink);
+  transition:transform .2s ease, background .2s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--paper);border:1px solid var(--line)}
+.cmd{
+  margin-top:42px;padding:18px 20px;border:1px solid var(--line);border-radius:18px;
+  background:rgba(255,255,255,.03);backdrop-filter:blur(8px);
+  animation:rise .9s .32s cubic-bezier(.2,.8,.2,1) both;
+}
+.cmd .label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+.cmd code{display:block;font-size:clamp(13px,2vw,16px);color:#d7e7dc;white-space:pre-wrap}
+.cmd button{
+  margin-top:12px;border:0;background:transparent;color:var(--accent);font:inherit;cursor:pointer;padding:0;
+}
+.rail{margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  animation:rise .9s .4s cubic-bezier(.2,.8,.2,1) both}
+@media(max-width:720px){.rail{grid-template-columns:1fr}}
+.rail div{border-top:1px solid var(--line);padding-top:14px}
+.rail strong{display:block;font-family:"Fraunces",serif;font-size:18px;font-weight:500;margin-bottom:6px}
+.rail span{color:var(--mute);font-size:12px;line-height:1.5}
+footer{margin-top:56px;color:rgba(243,239,230,.35);font-size:11px;letter-spacing:.04em;
+  animation:rise .9s .48s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pulse{position:absolute;right:8%;top:18%;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,107,74,.35),transparent 70%);
+  animation:breathe 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes breathe{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.08);opacity:.9}}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--paper);color:var(--ink);
+  padding:10px 16px;border-radius:999px;font-size:12px;opacity:0;transition:.2s;pointer-events:none}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="pulse" aria-hidden="true"></div>
+    <h1 class="brand">AgentGate</h1>
+    <p class="line">Protect every tool call.</p>
+    <p class="sub">On your machine. Tamper-evident. No cloud required. Complexity stays behind one command.</p>
+    <div class="cta">
+      <a class="btn" href="danger.html">See it</a>
+      <a class="btn ghost" href="#start">Start</a>
+      <a class="btn ghost" href="easy.html">Buy path · easy replies</a>
+    </div>
+
+    <div class="cmd" id="start">
+      <div class="label">The only command that matters</div>
+      <code id="cmd">pip install -e .<br>agentgate start</code>
+      <button type="button" id="copy">Copy</button>
+    </div>
+
+    <div class="rail">
+      <div><strong>Say no</strong><span>Hundreds of flags stay optional. You begin with start → proxy.</span></div>
+      <div><strong>It feels inevitable</strong><span>Same agent. Two lanes. One safe. Watch the demo.</span></div>
+      <div><strong>Proof, not promise</strong><span>Hash-chained audit. Export when a human asks.</span></div>
+    </div>
+    <footer>Designed to disappear into the path between your agent and its tools.</footer>
+  </div>
+  <div id="toast">Copied</div>
+  <script>
+  (function(){
+    var t=document.getElementById('toast');
+    document.getElementById('copy').onclick=function(){
+      var text='pip install -e .\nagentgate start';
+      (navigator.clipboard&&navigator.clipboard.writeText(text)?navigator.clipboard.writeText(text):Promise.reject())
+        .then(function(){t.classList.add('on');setTimeout(function(){t.classList.remove('on')},900)})
+        .catch(function(){prompt('Copy', text)});
+    };
+  })();
+  </script>
+</body>
+</html>

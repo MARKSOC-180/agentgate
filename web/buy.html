@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your next enterprise deal is dying in security review — AgentGate</title>
+<meta name="description" content="Prepaid Design Partner: self-hosted agent/MCP control plane + questionnaire unblock pack + tamper-evident evidence. Email-only. 30 days." />
+<meta property="og:title" content="Stop losing ARR to the agent security review" />
+<meta property="og:description" content="See the deal-kill questions. See the pack that answers them. Prepaid Design Partner — async." />
+<style>
+:root{
+  --bg:#07080d; --panel:#12141c; --panel2:#0e1018; --line:#222637;
+  --txt:#e7eaf3; --dim:#8b90a6; --red:#ff5d6c; --grn:#39d98a; --amber:#ffce5a; --blue:#5aa9ff;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+body{background:
+  radial-gradient(900px 480px at 80% -10%,rgba(255,93,108,.12),transparent 55%),
+  radial-gradient(800px 500px at 10% 20%,rgba(57,217,138,.08),transparent 50%),
+  var(--bg)}
+a{color:var(--blue)}
+.wrap{max-width:820px;margin:0 auto;padding:40px 22px 80px}
+.kicker{font-family:system-ui,sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);font-weight:700}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.12;margin:14px 0 12px;font-weight:700;letter-spacing:-.02em}
+.sub{font-family:system-ui,sans-serif;color:var(--dim);font-size:16px;line-height:1.55;max-width:38em}
+.bleed{margin:28px 0;padding:18px 20px;border:1px solid rgba(255,93,108,.35);
+  background:linear-gradient(180deg,rgba(255,93,108,.12),rgba(255,93,108,.03));border-radius:4px}
+.bleed strong{color:var(--red)}
+.calc{margin:32px 0;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:4px;
+  font-family:system-ui,sans-serif}
+.calc label{display:block;font-size:12px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.calc input[type=range]{width:100%;accent-color:var(--red)}
+.calc .row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px}
+.calc .num{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.calc .num.loss{color:var(--red)} .calc .num.ins{color:var(--grn)}
+.calc .hint{font-size:13px;color:var(--dim);margin-top:10px;line-height:1.5}
+.section{margin:40px 0}
+.section h2{font-size:22px;margin:0 0 12px}
+.section p,.section li{font-family:system-ui,sans-serif;color:var(--dim);line-height:1.55}
+table{width:100%;border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;margin:16px 0}
+th,td{border:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top}
+th{background:var(--panel2);color:var(--dim);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+td.no{color:var(--red);font-weight:700} td.yes{color:var(--grn);font-weight:700}
+.checklist{list-style:none;padding:0;margin:0;font-family:system-ui,sans-serif}
+.checklist li{padding:12px 14px;border:1px solid var(--line);border-bottom:0;background:var(--panel);display:flex;gap:12px;align-items:flex-start}
+.checklist li:last-child{border-bottom:1px solid var(--line)}
+.checklist .tick{color:var(--grn);font-weight:800;flex-shrink:0}
+.checklist b{color:var(--txt);display:block;margin-bottom:2px}
+.cta-box{margin:36px 0;padding:28px 24px;background:var(--panel);border:1px solid var(--grn);border-radius:4px;
+  box-shadow:0 0 0 1px rgba(57,217,138,.15),0 24px 60px rgba(0,0,0,.45);font-family:system-ui,sans-serif}
+.cta-box h2{margin:0 0 8px;font-size:22px;font-family:Georgia,serif;color:var(--txt)}
+.price{font-size:34px;font-weight:800;color:var(--grn);margin:8px 0 4px;font-variant-numeric:tabular-nums}
+.price small{font-size:14px;color:var(--dim);font-weight:500}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-block;padding:14px 22px;border-radius:4px;font-weight:800;text-decoration:none;border:0;cursor:pointer;font-size:15px}
+.btn-primary{background:linear-gradient(180deg,#7df0c0,#34d08a);color:#06121b}
+.btn-primary:hover{filter:brightness(1.05);text-decoration:none}
+.btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.micro{font-size:12px;color:var(--dim);margin-top:12px;line-height:1.5}
+.proof{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media(max-width:640px){.proof{grid-template-columns:1fr}}
+.proof a{display:block;padding:14px;border:1px solid var(--line);background:var(--panel2);border-radius:4px;
+  text-decoration:none;color:var(--txt);font-family:system-ui,sans-serif;font-size:13px}
+.proof a:hover{border-color:var(--blue)}
+.proof span{display:block;color:var(--dim);font-size:12px;margin-top:4px}
+.anchor{font-family:system-ui,sans-serif;font-size:13px;color:var(--amber);margin:8px 0 0}
+footer{margin-top:48px;font-family:system-ui,sans-serif;font-size:12px;color:var(--dim);line-height:1.7}
+code{font-family:var(--mono);font-size:12px;background:var(--panel2);padding:2px 6px;border-radius:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Understand first · sell only if it fits</div>
+  <h1>If security review is stuck on agent tool-call evidence,<br>you’re in the right place. If not, leave.</h1>
+  <p class="sub">
+    We’d rather lose a short-term order than pretend we fix everything.
+    This is for one narrow pain: <em>attachable proof</em> for agent/MCP calls (auth, egress, tamper-evident logs) —
+    not a fake certificate factory.
+  </p>
+
+  <div class="bleed">
+    <strong>The pain is not “missing a feature.”</strong>
+    <span style="font-family:system-ui,sans-serif;color:var(--dim)">
+      The pain is a six-figure (or seven-figure) contract stuck on a questionnaire you cannot answer with evidence.
+    </span>
+  </div>
+
+  <div class="calc" id="calc">
+    <label for="deal">Deal size at risk (what security review can kill)</label>
+    <input id="deal" type="range" min="100000" max="5000000" step="50000" value="1000000" />
+    <div class="row">
+      <div>
+        <div class="hint" style="margin:0">If this review fails, you lose about</div>
+        <div class="num loss" id="loss">$1,000,000</div>
+      </div>
+      <div>
+        <div class="hint" style="margin:0">Typical unblock insurance (≈8–12%)</div>
+        <div class="num ins" id="ins">$100,000 – $120,000</div>
+      </div>
+    </div>
+    <p class="hint">
+      People don’t buy “security tools.” They buy <b style="color:var(--txt)">not losing that number</b>.
+      Move the slider — watch what “expensive” actually means.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>What security will ask (and what happens without a gate)</h2>
+    <table>
+      <tr><th>Question in the review</th><th>No control plane</th><th>With AgentGate pack</th></tr>
+      <tr><td>Who authorized each tool call?</td><td class="no">Vague / “the model”</td><td class="yes">Policy + identity fields in audit</td></tr>
+      <tr><td>Can destructive actions require a human?</td><td class="no">Hope + prompt</td><td class="yes">Human-in-the-loop approval</td></tr>
+      <tr><td>Does agent traffic leave your VPC?</td><td class="no">Often yes (hosted)</td><td class="yes">Self-hosted, zero egress by default</td></tr>
+      <tr><td>Can you prove logs weren’t edited?</td><td class="no">Admin can rewrite</td><td class="yes">Hash chain + optional anchors</td></tr>
+      <tr><td>Can we attach evidence to the questionnaire?</td><td class="no">Screenshot chaos</td><td class="yes">Unblock pack + export zip</td></tr>
+    </table>
+    <p><a href="danger.html">▶ 30-second demo: same agent, ungoverned vs gated</a> · <a href="delivery-preview.html">▶ Preview the delivery pack</a></p>
+  </div>
+
+  <div class="section">
+    <h2>What you get in 30 days (email-only)</h2>
+    <ul class="checklist">
+      <li><span class="tick">✓</span><div><b>Self-hosted gate in front of MCP / tool calls</b>Policy, redaction, approvals, kill-switch — on your infra.</div></li>
+      <li><span class="tick">✓</span><div><b>Vendor Security Unblock Pack</b>Draft answers + evidence map for the agent/MCP questions that kill deals.</div></li>
+      <li><span class="tick">✓</span><div><b>MCP-SP evidence export</b>Report + conformance materials reviewers can open without a sales call.</div></li>
+      <li><span class="tick">✓</span><div><b>One written strategy review</b>Still async. No Zoom tax.</div></li>
+    </ul>
+    <p class="anchor">We do <b>not</b> sell fake SOC2 certificates. We sell the control plane + evidence layer those questionnaires ask for.</p>
+  </div>
+
+  <div class="section">
+    <h2>Three plain answers</h2>
+    <table>
+      <tr><th>Question</th><th>Plain answer</th></tr>
+      <tr><td>Worth it?</td><td>Only if a real deal or deadline is at risk. Prepaid should be a small slice of that — if you can’t name the risk, don’t buy.</td></tr>
+      <tr><td>How do we use it?</td><td>Gate in front of MCP/tool calls + questionnaire drafts/evidence map + export zip. Email-only, 30 days.</td></tr>
+      <tr><td>How is risk handled?</td><td>Self-prove first. One-page SOW. No fake SOC2. Work starts after prepaid clears. We say no when it’s not a fit.</td></tr>
+    </table>
+  </div>
+
+  <div class="cta-box" id="dp">
+    <h2>Design Partner — when it fits</h2>
+    <div class="price">$250,000 <small>USD · 100% prepaid · floor $100,000</small></div>
+    <p style="color:var(--dim);margin:0;line-height:1.5">
+      Credits 100% to year-1 self-hosted license.
+      Prepaid reserves real delivery capacity — not a gimmick countdown.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" id="dp-mail" href="mailto:?subject=AgentGate%20fit%20check&body=Our%20situation%3A%0AAt-risk%20(if%20any)%3A%20%24%0AMost%20painful%20part%20(auth%20%2F%20egress%20%2F%20audit%20%2F%20questionnaire)%3A%0A">Describe the pain — if it fits, ask for SOW</a>
+      <a class="btn btn-ghost" href="delivery-preview.html">See sample pack</a>
+      <a class="btn btn-ghost" href="danger.html">30s demo</a>
+    </div>
+    <p class="micro">
+      Fastest: open <a href="easy.html">easy.html</a> — tap to copy YES / Send SOW / pass. No essay required.
+    </p>
+    <div class="proof">
+      <a href="start.html">Product — AgentGate<span>One command. Protect every tool call.</span></a>
+      <a href="danger.html">Live contrast demo<span>See the problem in 30 seconds</span></a>
+      <a href="compare.html">Capability table<span>Ungoverned MCP vs Level 3</span></a>
+      <a href="https://github.com/MARKSOC-180/agentgate">Docker in minutes<span>Trust without a meeting</span></a>
+      <a href="packs/vendor_security_unblock/QUESTION_BANK.md">Questionnaire bank<span>What “unblock” looks like in writing</span></a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Who this is for</h2>
+    <p>Founders / sales leaders whose <b style="color:var(--txt)">enterprise deal is blocked on agent/MCP security questions this quarter</b>.</p>
+    <p>Not for: browsers shopping for a $29 plugin · teams with no deal at risk · buyers who need a full SOC2 certificate factory tomorrow.</p>
+  </div>
+
+  <footer>
+    AgentGate is a self-hosted reference control plane for MCP-SP.
+    Design Partner is a 30-day prepaid engagement, not a guarantee that every procurement questionnaire will pass —
+    it is the fastest way to stop answering “we’ll get back to you” with nothing attachable.
+  </footer>
+</div>
+<script>
+(function(){
+  var deal = document.getElementById('deal');
+  var loss = document.getElementById('loss');
+  var ins = document.getElementById('ins');
+  function fmt(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+  function sync(){
+    var v = +deal.value;
+    loss.textContent = fmt(v);
+    var lo = Math.max(100000, Math.round(v * 0.08 / 5000) * 5000);
+    var hi = Math.max(lo, Math.round(v * 0.12 / 5000) * 5000);
+    if (hi > 300000) hi = 300000;
+    if (lo > 250000) lo = 250000;
+    ins.textContent = fmt(lo) + ' – ' + fmt(hi);
+  }
+  deal.addEventListener('input', sync); sync();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sample delivery pack — AgentGate Design Partner</title>
+<style>
+:root{--bg:#0a0b10;--panel:#12141c;--line:#222637;--txt:#e7eaf3;--dim:#8b90a6;--grn:#39d98a;--red:#ff5d6c;--amber:#ffce5a;--blue:#5aa9ff;
+--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:32px 20px 64px}
+.kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+h1{font-size:26px;margin:10px 0}
+.sub{color:var(--dim);line-height:1.5}
+.folder{margin:24px 0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.folder .bar{padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--grn)}
+.file{padding:12px 16px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;font-size:14px}
+.file:last-child{border-bottom:0}
+.file .ico{color:var(--amber)}
+.file b{display:block}
+.file span{color:var(--dim);font-size:12px;line-height:1.4}
+.badge{font-size:11px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}
+.sample{margin:28px 0;padding:18px;background:#0e1018;border:1px solid var(--line);border-radius:8px;font-family:var(--mono);font-size:12px;line-height:1.55;white-space:pre-wrap;color:#c8cde0}
+.sample .h{color:var(--grn)}
+.sample .q{color:var(--amber)}
+.cta{margin-top:28px}
+a.btn{display:inline-block;padding:12px 18px;background:linear-gradient(180deg,#7df0c0,#34d08a);color:#06121b;font-weight:800;text-decoration:none;border-radius:6px;margin-right:8px}
+a.ghost{color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">What prepaid buys — sample pack (sanitized)</div>
+  <h1>Open this like a security reviewer would</h1>
+  <p class="sub">Concrete files beat promises. This is the shape of a Design Partner delivery — not a fake SOC2 certificate.</p>
+
+  <div class="folder">
+    <div class="bar">pilot_delivery_acme_YYYYMMDD/</div>
+    <div class="file"><span class="ico">📄</span><div><b>README_DELIVERY.txt</b><span>Acceptance checklist · chain verify · MCP-SP level</span></div><span class="badge">first open</span></div>
+    <div class="file"><span class="ico">📄</span><div><b>agentgate_report.html</b><span>Executive report security can skim in one tab</span></div><span class="badge">attach</span></div>
+    <div class="file"><span class="ico">📄</span><div><b>mcp_sp_conformance.json</b><span>Machine-readable Level badge evidence</span></div><span class="badge">verify</span></div>
+    <div class="file"><span class="ico">📁</span><div><b>compliance_export/</b><span>MD · CSV · JSON · CEF for GRC / SIEM</span></div><span class="badge">import</span></div>
+    <div class="file"><span class="ico">📁</span><div><b>vendor_security_unblock/</b><span>Questionnaire drafts + evidence map for agent/MCP rows</span></div><span class="badge">unblock</span></div>
+  </div>
+
+  <h2 style="font-size:18px">Snippet — questionnaire draft (agent section)</h2>
+  <div class="sample"><span class="h">## Q: How are agent tool invocations authorized and logged?</span>
+<span class="q">DRAFT ANSWER:</span>
+All tool calls pass through a self-hosted AgentGate control plane deployed
+in our environment (zero egress of call content by default). Each call is
+evaluated against policy (allow/deny/approve), optionally redacted for
+secrets/PII, and appended to a tamper-evident hash-chained audit log.
+
+<span class="q">EVIDENCE TO ATTACH:</span>
+- agentgate_report.html (summary)
+- compliance_export/audit_export.csv (sample window)
+- mcp_sp_conformance.json (level attestation)
+- policy excerpt: agentgate.config.json (redacted)
+
+<span class="h">## Q: Can destructive actions require human approval?</span>
+<span class="q">DRAFT ANSWER:</span>
+Yes. High-risk tools are marked require_approval; execution waits for an
+explicit human decision recorded in the audit stream before the upstream
+MCP server is invoked.</div>
+
+  <p class="sub">Full bank lives in the repo under <code>packs/vendor_security_unblock/</code> — customized per customer in a paid Design Partner.</p>
+
+  <div class="cta">
+    <a class="btn" href="buy.html">Back to offer →</a>
+    <a class="ghost" href="danger.html">Watch the 30s demo</a>
+  </div>
+</div>
+</body>
+</html>
