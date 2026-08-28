@@ -2,10 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>优行AI · 自动演示 · 双博主隔离验收</title>
   <style>
 :root {
@@ -421,27 +418,6 @@ body.autoplaying .caption {
   margin-left: -4px;
   margin-right: -4px;
 }
-.gate {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  background: rgba(7, 8, 12, 0.92);
-  display: grid;
-  place-items: center;
-  padding: 24px;
-}
-.gate.hidden { display: none; }
-.gate-card {
-  width: min(420px, 100%);
-  text-align: center;
-  background: #12141c;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 28px 22px;
-}
-.gate-card .mark { margin: 0 auto 14px; }
-.gate-card h2 { font-size: 22px; margin-bottom: 10px; }
-.gate-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
 .phone-col.focus .phone {
   box-shadow: var(--shadow), 0 0 0 3px rgba(226, 181, 122, 0.7);
 }
@@ -475,14 +451,6 @@ body.wx.autoplaying .pills { display: none; }
   </style>
 </head>
 <body>
-  <div id="gate" class="gate">
-    <div class="gate-card">
-      <div class="mark">优</div>
-      <h2>同一句话，打进两个博主</h2>
-      <p>自动演示隔离：留学博主答不了财税，财税博主答不了留学。微信请先点一下开始。</p>
-      <button class="btn-gold" id="btn-play" type="button">播放自动演示</button>
-    </div>
-  </div>
   <div class="noise"></div>
   <div class="wrap">
     <header class="topbar">
@@ -517,13 +485,13 @@ body.wx.autoplaying .pills { display: none; }
           <span>检索核 / 生产换 <b>Dify Chat API</b></span>
         </div>
         <div class="actions">
+          <button class="btn-gold" id="btn-play" type="button">播放自动演示</button>
           <button class="btn-gold" id="btn-lab" type="button">跑三项隔离验收</button>
-          <button class="btn-gold" id="btn-replay" type="button" hidden>再播一遍</button>
           <button class="btn-ghost" id="btn-refill-lin" type="button">林晚 +10 次</button>
           <button class="btn-ghost" id="btn-refill-chen" type="button">陈衡 +10 次</button>
         </div>
-        <p class="lead" id="hero-stamp" style="margin-top:14px;color:#e2b57a">微信里先点播放，自动跑完三项。</p>
-        <p class="caption" id="caption">等待播放</p>
+        <p class="lead" id="hero-stamp" style="margin-top:14px;color:#e2b57a">浏览器打开即播。三项隔离自动打两边。</p>
+        <p class="caption" id="caption">正在启动自动演示</p>
       </div>
       <aside class="card report">
         <div class="kicker">你会看见什么</div>
@@ -917,10 +885,8 @@ async function runAuto() {
   if (autoRunning) return;
   autoRunning = true;
   document.body.classList.add("autoplaying");
-  const gate = el("gate");
-  if (gate) gate.classList.add("hidden");
-  const replay = el("btn-replay");
-  if (replay) replay.hidden = true;
+  const play = el("btn-play");
+  if (play) play.hidden = true;
   resetDemo();
   say("同一句话，先打进林晚，再打进陈衡。看会不会串库。");
   focusPhone("lin");
@@ -956,7 +922,10 @@ async function runAuto() {
   say(all ? "播完了。点「再播一遍」可重来。" : "播完了，有失败项。");
   document.body.classList.remove("autoplaying");
   autoRunning = false;
-  if (replay) replay.hidden = false;
+  if (play) {
+    play.hidden = false;
+    play.textContent = "再播一遍";
+  }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -978,13 +947,10 @@ window.addEventListener("DOMContentLoaded", () => {
   el("btn-refill-lin").addEventListener("click", () => { state.credits.lin += 10; setCredits("lin"); });
   el("btn-refill-chen").addEventListener("click", () => { state.credits.chen += 10; setCredits("chen"); });
   el("btn-play").addEventListener("click", () => { runAuto(); });
-  el("btn-replay").addEventListener("click", () => { runAuto(); });
   PRESETS.forEach((t) => {
     el("q-" + t.id).textContent = t.q;
   });
-  if (location.protocol === "file:") {
-    say("本地文件微信打不开。要用 https 公网链接。");
-  }
+  setTimeout(() => { runAuto(); }, 280);
 });
 
   </script>

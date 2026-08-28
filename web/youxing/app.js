@@ -292,10 +292,8 @@ async function runAuto() {
   if (autoRunning) return;
   autoRunning = true;
   document.body.classList.add("autoplaying");
-  const gate = el("gate");
-  if (gate) gate.classList.add("hidden");
-  const replay = el("btn-replay");
-  if (replay) replay.hidden = true;
+  const play = el("btn-play");
+  if (play) play.hidden = true;
   resetDemo();
   say("同一句话，先打进林晚，再打进陈衡。看会不会串库。");
   focusPhone("lin");
@@ -331,7 +329,10 @@ async function runAuto() {
   say(all ? "播完了。点「再播一遍」可重来。" : "播完了，有失败项。");
   document.body.classList.remove("autoplaying");
   autoRunning = false;
-  if (replay) replay.hidden = false;
+  if (play) {
+    play.hidden = false;
+    play.textContent = "再播一遍";
+  }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -353,11 +354,8 @@ window.addEventListener("DOMContentLoaded", () => {
   el("btn-refill-lin").addEventListener("click", () => { state.credits.lin += 10; setCredits("lin"); });
   el("btn-refill-chen").addEventListener("click", () => { state.credits.chen += 10; setCredits("chen"); });
   el("btn-play").addEventListener("click", () => { runAuto(); });
-  el("btn-replay").addEventListener("click", () => { runAuto(); });
   PRESETS.forEach((t) => {
     el("q-" + t.id).textContent = t.q;
   });
-  if (location.protocol === "file:") {
-    say("本地文件微信打不开。要用 https 公网链接。");
-  }
+  setTimeout(() => { runAuto(); }, 280);
 });
