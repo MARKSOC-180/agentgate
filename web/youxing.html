@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>优行AI · 自动演示 · 双博主隔离验收</title>
+  <style>
+:root {
+  --bg: #07080c;
+  --bg2: #0e1018;
+  --ink: #f4efe6;
+  --muted: #9a9388;
+  --line: rgba(255, 244, 220, 0.1);
+  --gold: #e2b57a;
+  --gold2: #f0d4a8;
+  --green: #07c160;
+  --red: #ff5a5f;
+  --phone: #111318;
+  --paper: #f7f4ee;
+  --paper-ink: #1c1915;
+  --wx: #ededed;
+  --shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { min-height: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  font-family: "PingFang SC", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse at 12% -10%, rgba(226, 181, 122, 0.16), transparent 42%),
+    radial-gradient(ellipse at 90% 0%, rgba(7, 193, 96, 0.08), transparent 36%),
+    radial-gradient(ellipse at 70% 100%, rgba(90, 70, 180, 0.12), transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.wrap {
+  position: relative;
+  z-index: 2;
+  width: min(1440px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 64px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f0d4a8, #c4893a);
+  color: #2a1c0a;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 24px rgba(226, 181, 122, 0.28);
+}
+.brand h1 {
+  font-size: 20px;
+  font-weight: 720;
+  letter-spacing: 0.02em;
+}
+.brand p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--gold2);
+  background: rgba(226, 181, 122, 0.06);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  backdrop-filter: blur(18px);
+}
+.hero h2 {
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 720;
+  max-width: 16em;
+}
+.hero h2 em {
+  font-style: normal;
+  color: var(--gold);
+}
+.lead { margin-top: 12px; color: #cfc6b8; font-size: 15px; line-height: 1.7; max-width: 40em; }
+
+.arch {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.arch span {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #141722;
+  border: 1px solid var(--line);
+  color: #ddd4c6;
+}
+.arch b { color: var(--gold); font-weight: 650; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+button, .btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+.btn-gold, .btn-ghost, .btn-green {
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 650;
+}
+.btn-gold {
+  background: linear-gradient(180deg, #f3d7a4, #d4a05a);
+  color: #2a1c0a;
+  box-shadow: 0 10px 24px rgba(212, 160, 90, 0.28);
+}
+.btn-gold:hover { filter: brightness(1.05); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-green { background: var(--green); color: #fff; }
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.report ol { margin: 8px 0 0 18px; color: #d7d0c5; font-size: 14px; line-height: 1.7; }
+.kicker {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.stage { display: grid; grid-template-columns: 1fr 320px 1fr; gap: 18px; align-items: start; }
+.phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.who {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.credits {
+  color: var(--gold2);
+  background: rgba(226,181,122,.1);
+  border: 1px solid rgba(226,181,122,.2);
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.phone {
+  width: 320px;
+  height: 680px;
+  background: #0a0a0c;
+  border-radius: 42px;
+  padding: 10px;
+  box-shadow: var(--shadow), inset 0 0 0 2px #2a2c33;
+  position: relative;
+}
+.phone::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92px;
+  height: 22px;
+  background: #000;
+  border-radius: 16px;
+  z-index: 5;
+}
+.screen {
+  height: 100%;
+  background: var(--wx);
+  border-radius: 34px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.wx-bar {
+  background: #ededed;
+  padding: 16px 14px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #111;
+  font-size: 12px;
+  font-weight: 650;
+}
+.capsule {
+  width: 78px;
+  height: 24px;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  display: flex;
+  overflow: hidden;
+}
+.capsule i { flex: 1; display: grid; place-items: center; font-style: normal; font-size: 10px; color: #444; }
+.capsule i:first-child { border-right: 1px solid #d0d0d0; }
+
+.nav {
+  background: #ededed;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 10px;
+  color: #111;
+}
+.nav .back { font-size: 20px; width: 24px; }
+.nav .title { font-size: 16px; font-weight: 700; }
+.nav .sub { font-size: 11px; color: #888; font-weight: 400; }
+
+.chat {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 12px 8px;
+  background: #ededed;
+  -webkit-overflow-scrolling: touch;
+}
+.bubble {
+  max-width: 86%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.bubble.bot { background: #fff; color: #1c1c1c; border-top-left-radius: 2px; }
+.bubble.me { background: #95ec69; color: #111; margin-left: auto; border-top-right-radius: 2px; }
+.meta {
+  font-size: 11px;
+  color: #8a8a8a;
+  margin: 4px 2px 0;
+}
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 14px;
+  background: #07c160;
+  margin-left: 2px;
+  vertical-align: -2px;
+  animation: blink 0.9s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.composer {
+  background: #f7f7f7;
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.composer input {
+  flex: 1;
+  border: 0;
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  color: #111;
+}
+.send {
+  background: #07c160;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.lab {
+  background: linear-gradient(180deg, #14161f, #0f1118);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 16px;
+  min-height: 680px;
+}
+.lab h3 { font-size: 16px; margin-bottom: 6px; }
+.lab .hint { color: var(--muted); font-size: 12px; line-height: 1.6; margin-bottom: 12px; }
+.probe {
+  width: 100%;
+  background: #0b0d13;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.tests { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.test {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: #10131a;
+}
+.test .row { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.test small { color: var(--muted); display: block; margin-top: 4px; line-height: 1.5; }
+.badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.badge.wait { background: #2a2d36; color: #bbb; }
+.badge.pass { background: rgba(7,193,96,.16); color: #3ee08a; }
+.badge.fail { background: rgba(255,90,95,.16); color: #ff8084; }
+
+.log {
+  margin-top: 12px;
+  background: #07090e;
+  border-radius: 12px;
+  padding: 10px;
+  min-height: 160px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c8c2b6;
+  white-space: pre-wrap;
+}
+.log .ok { color: #3ee08a; }
+.log .bad { color: #ff8084; }
+.log .dim { color: #7d776e; }
+
+.admin {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.doc {
+  background: #161820;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #d9d3c8;
+}
+.doc b { color: var(--gold2); display: block; margin-bottom: 4px; }
+.foot {
+  margin-top: 28px;
+  color: #7f786e;
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 70em;
+}
+
+.caption {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--gold2);
+  min-height: 1.4em;
+}
+body.autoplaying .caption {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: rgba(7, 8, 12, 0.94);
+  padding: 10px 4px;
+  margin-left: -4px;
+  margin-right: -4px;
+}
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(7, 8, 12, 0.92);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.gate.hidden { display: none; }
+.gate-card {
+  width: min(420px, 100%);
+  text-align: center;
+  background: #12141c;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 28px 22px;
+}
+.gate-card .mark { margin: 0 auto 14px; }
+.gate-card h2 { font-size: 22px; margin-bottom: 10px; }
+.gate-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
+.phone-col.focus .phone {
+  box-shadow: var(--shadow), 0 0 0 3px rgba(226, 181, 122, 0.7);
+}
+body.autoplaying .composer { pointer-events: none; opacity: 0.35; }
+body.autoplaying .actions { pointer-events: none; opacity: 0.4; }
+body.wx.autoplaying .lab,
+body.wx.autoplaying .admin,
+body.wx.autoplaying .foot,
+body.wx.autoplaying .hero .report,
+body.wx.autoplaying .hero .arch,
+body.wx.autoplaying .pills { display: none; }
+
+@media (max-width: 1180px) {
+  .hero, .stage, .admin { grid-template-columns: 1fr; }
+  .phone { width: min(320px, 100%); height: 560px; }
+  .lab { min-height: 0; }
+  .hero h2 { font-size: 24px; }
+  .wrap { width: min(1440px, calc(100% - 16px)); padding-top: 16px; }
+}
+@media (max-width: 720px) {
+  .admin { display: none; }
+  .pills { display: none; }
+  .topbar { margin-bottom: 12px; }
+  .hero .report ol { font-size: 13px; }
+  .actions .btn-ghost { display: none; }
+  body.autoplaying .lab,
+  body.autoplaying .hero .report,
+  body.autoplaying .hero .arch { display: none; }
+  .phone { height: 520px; }
+}
+  </style>
+</head>
+<body>
+  <div id="gate" class="gate">
+    <div class="gate-card">
+      <div class="mark">优</div>
+      <h2>同一句话，打进两个博主</h2>
+      <p>自动演示隔离：留学博主答不了财税，财税博主答不了留学。微信请先点一下开始。</p>
+      <button class="btn-gold" id="btn-play" type="button">播放自动演示</button>
+    </div>
+  </div>
+  <div class="noise"></div>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">优</div>
+        <div>
+          <h1>优行AI · 博主分身</h1>
+          <p>给甲方的现场验收件 · 赵家铭交付 · 不是 PPT</p>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="pill">流式对话</span>
+        <span class="pill">多商户隔离</span>
+        <span class="pill">次数扣费</span>
+        <span class="pill">生产接 Dify / 微信支付</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="kicker">Eleduck 需求对位</div>
+        <h2>同一句话，打进两个博主。<em>不串库，才叫 SaaS。</em></h2>
+        <p class="lead">
+          你要的不是「我会做小程序」。你要的是：粉丝付费问、博主私有知识库、数据物理逻辑隔离、扣次后再转发模型。
+          下面两台真机并行，点一次「跑隔离验收」，三项测试自动打两边。
+        </p>
+        <div class="arch">
+          <span>微信小程序壳</span>
+          <span>→</span>
+          <span>中间层 <b>租户 + 扣次</b></span>
+          <span>→</span>
+          <span>检索核 / 生产换 <b>Dify Chat API</b></span>
+        </div>
+        <div class="actions">
+          <button class="btn-gold" id="btn-lab" type="button">跑三项隔离验收</button>
+          <button class="btn-gold" id="btn-replay" type="button" hidden>再播一遍</button>
+          <button class="btn-ghost" id="btn-refill-lin" type="button">林晚 +10 次</button>
+          <button class="btn-ghost" id="btn-refill-chen" type="button">陈衡 +10 次</button>
+        </div>
+        <p class="lead" id="hero-stamp" style="margin-top:14px;color:#e2b57a">微信里先点播放，自动跑完三项。</p>
+        <p class="caption" id="caption">等待播放</p>
+      </div>
+      <aside class="card report">
+        <div class="kicker">你会看见什么</div>
+        <ol>
+          <li>林晚只懂留学文书，陈衡只懂个体财税。</li>
+          <li>问工资公户：林晚拒绝，陈衡引用他自己的文档。</li>
+          <li>问斯坦福 SOP：反过来。泄漏雷达扫描对方独占术语。</li>
+          <li>每句扣 1 次。次数见手机右上角。</li>
+          <li>本页可离线点。生产把检索核换成你的 Dify，支付走你的商户号。</li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="stage">
+      <div class="phone-col" id="col-lin">
+        <div class="who"><span>粉丝端 · 博主 A</span><span class="credits" id="credit-lin">10 次</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="wx-bar"><span>9:41</span><span class="capsule"><i>···</i><i>○</i></span></div>
+            <div class="nav">
+              <div class="back">‹</div>
+              <div>
+                <div class="title">林晚</div>
+                <div class="sub">留学规划 · ¥29.9/10次 · 私有库</div>
+              </div>
+            </div>
+            <div class="chat" id="chat-lin"></div>
+            <form class="composer" id="form-lin">
+              <input id="input-lin" maxlength="80" placeholder="问林晚，例如：文书怎么写" />
+              <button class="send" type="submit">发送</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lab">
+        <h3>甲方验收台</h3>
+        <p class="hint">输入任意一句，同时打进两个租户。比看代码更快：看会不会说对方的话。</p>
+        <input class="probe" id="probe" placeholder="自定义同一句，例如：怎么开专票？" />
+        <button class="btn-green" id="btn-custom" type="button" style="width:100%">用这句打两边</button>
+        <div class="tests">
+          <div class="test">
+            <div class="row"><b>1. 财税题</b><span class="badge wait" id="badge-t1">待测</span></div>
+            <small id="q-t1"></small>
+          </div>
+          <div class="test">
+            <div class="row"><b>2. 留学题</b><span class="badge wait" id="badge-t2">待测</span></div>
+            <small id="q-t2"></small>
+          </div>
+          <div class="test">
+            <div class="row"><b>3. W-2</b><span class="badge wait" id="badge-t3">待测</span></div>
+            <small id="q-t3"></small>
+          </div>
+        </div>
+        <div class="log" id="lab-log">日志空着。点左上角金色按钮。</div>
+      </aside>
+
+      <div class="phone-col" id="col-chen">
+        <div class="who"><span>粉丝端 · 博主 B</span><span class="credits" id="credit-chen">10 次</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="wx-bar"><span>9:41</span><span class="capsule"><i>···</i><i>○</i></span></div>
+            <div class="nav">
+              <div class="back">‹</div>
+              <div>
+                <div class="title">陈衡</div>
+                <div class="sub">个体财税 · ¥39.9/10次 · 私有库</div>
+              </div>
+            </div>
+            <div class="chat" id="chat-chen"></div>
+            <form class="composer" id="form-chen">
+              <input id="input-chen" maxlength="80" placeholder="问陈衡，例如：公户怎么发工资" />
+              <button class="send" type="submit">发送</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin">
+      <div class="card">
+        <div class="kicker">博主后台 · 林晚能看见的文档</div>
+        <p class="lead" style="margin-top:0">陈衡登录后看不到这些。生产对接 Dify Dataset API，按 app_id 隔离。</p>
+        <div id="docs-lin"></div>
+      </div>
+      <div class="card">
+        <div class="kicker">博主后台 · 陈衡能看见的文档</div>
+        <p class="lead" style="margin-top:0">林晚登录后看不到这些。中间层永不把 A 的 dataset_id 传给 B 的会话。</p>
+        <div id="docs-chen"></div>
+      </div>
+    </section>
+
+    <p class="foot">
+      验收范围对位电鸭帖「优行AI博主智能体」：小程序用户端流式对话、会员次数、多商户知识库隔离、Dify 二次对接位。
+      本页是可点核，检索在浏览器内完成，保证现场不断网也能测隔离。生产环境替换为 Dify Chat/Dataset API + 微信 JSAPI 支付 + 你的小程序主体。
+      报价与付款不在本页承诺。交付人：赵家铭 · 3615199893@qq.com
+    </p>
+  </div>
+  <script>
+const TENANTS = {
+  lin: {
+    id: "lin",
+    name: "林晚",
+    title: "留学规划",
+    tag: "文书 / 选校 / 套磁",
+    price: "¥29.9 / 10次",
+    credits: 10,
+    exclusive: ["斯坦福", "文书", "套磁", "托福", "Common App", "选校", "WES", "CS硕士", "推荐信", "ED"],
+    docs: [
+      { t: "选校定位-CS硕士", k: ["斯坦福", "卡内基梅隆", "CMU", "CS", "选校", "排名", "研究组"], x: "冲刺档：斯坦福CS、CMU SCS需顶会/强科研；匹配档：UCSD、UCLA、UIUC；保底档：NEU、NYU Tandon。林晚只按「科研匹配度>综合排名」排表，不卖排名焦虑。" },
+      { t: "文书结构-SOP", k: ["文书", "SOP", "个人陈述", "故事", "科研"], x: "林晚模板四段：钩子场景（实验室一次失败）→ 能力证据（方法/指标）→ Why this lab（点名教授论文）→ 三年贡献。禁止空话「从小热爱计算机」。" },
+      { t: "套磁节奏", k: ["套磁", "教授", "邮件", "CV"], x: "套磁窗口：网申前6-10周。第一封≤120词，只提对方最近一篇论文的一个具体实验设置。附件CV一页。林晚禁止群发同一封。" },
+      { t: "标化与材料", k: ["托福", "GRE", "WES", "成绩单", "推荐信"], x: "CS申请托福建议100+；GRE多数CS已optional。成绩单做WES course-by-course。推荐信至少一封来自带你发过论文或做过工程的导师。" },
+      { t: "ED/RD策略", k: ["ED", "RD", "早申", "奖学金"], x: "ED只绑「去了不后悔」的一所。用ED冲排名而不匹配研究方向，是林晚明确反对的。奖学金故事写清楚：你能给实验室省哪笔标注/算力成本。" }
+    ]
+  },
+  chen: {
+    id: "chen",
+    name: "陈衡",
+    title: "个体财税",
+    tag: "对公 / 发票 / 汇算",
+    price: "¥39.9 / 10次",
+    credits: 10,
+    exclusive: ["个体户", "对公", "专票", "汇算清缴", "核定征收", "个税", "W-2", "社保", "公户", "普票"],
+    docs: [
+      { t: "个体户开公户", k: ["个体户", "对公", "公户", "银行", "开户"], x: "个体户可开对公账户。陈衡流程：营业执照+法人身份证+公章/财务章，预约开户。公户用于收平台货款、发工资、缴税，避免公私混同被税局盯资金流。" },
+      { t: "工资与个税", k: ["工资", "个税", "代扣", "工资表"], x: "用对公发工资：做工资表→个税扣缴客户端申报→公户代发。陈衡禁止「公户提现再发红包当工资」。员工应发、专项扣除、实发三列必须对齐。" },
+      { t: "发票与专票", k: ["专票", "普票", "进项", "销项", "发票"], x: "一般纳税人可抵进项专票；小规模主要普票。陈衡口径：没有真实交易不开票。平台服务费专票进项要和合同、流水三单匹配。" },
+      { t: "汇算清缴", k: ["汇算清缴", "年报", "所得税", "核定征收"], x: "查账征收按利润；核定征收按税务局核定应税所得率。汇算前先对银行流水与发票。陈衡不建议为了「少交」改核定，被查成本更高。" },
+      { t: "境外收入W-2", k: ["W-2", "境外", "美国", "报税", "税收协定"], x: "美国W-2工资在中国居民纳税人下需申报境外所得，可按中美税收协定抵免已缴美国税款。陈衡要求先备W-2、1040、完税证明再谈抵免，不口述数字。" }
+    ]
+  }
+};
+
+const state = {
+  credits: { lin: 10, chen: 10 },
+  streaming: { lin: false, chen: false }
+};
+
+function grams(s) {
+  const t = String(s || "").toLowerCase().replace(/\s+/g, "");
+  const out = [];
+  for (let i = 0; i < t.length - 1; i++) out.push(t.slice(i, i + 2));
+  return out;
+}
+
+function score(query, doc) {
+  let s = 0;
+  for (const k of doc.k) {
+    if (query.includes(k)) s += 14;
+  }
+  const qg = grams(query);
+  const hg = new Set(grams(doc.t + doc.k.join("") + doc.x));
+  let overlap = 0;
+  for (const g of qg) if (hg.has(g)) overlap += 1;
+  return s + Math.min(overlap, 16);
+}
+
+function signals(tid, query) {
+  const other = tid === "lin" ? "chen" : "lin";
+  const own = TENANTS[tid].exclusive.filter((w) => query.includes(w)).length;
+  const foreign = TENANTS[other].exclusive.filter((w) => query.includes(w)).length;
+  return { own, foreign };
+}
+
+function retrieve(tid, query) {
+  const ranked = TENANTS[tid].docs
+    .map((d) => ({ ...d, s: score(query, d) }))
+    .sort((a, b) => b.s - a.s);
+  const { own, foreign } = signals(tid, query);
+  if (foreign > own && (ranked[0]?.s || 0) < 20) return [];
+  return ranked.filter((d) => d.s >= 12).slice(0, 3);
+}
+
+function leakScan(text, tid) {
+  const other = tid === "lin" ? "chen" : "lin";
+  const hits = TENANTS[other].exclusive.filter((w) => text.includes(w));
+  return hits;
+}
+
+function refuse(tid) {
+  const t = TENANTS[tid];
+  return [
+    "这题不在我的知识库里。",
+    `我是${t.name}，只根据自己的私有库回答「${t.title}」。`,
+    "跨博主的问题请切换对应博主。我不会去读别人的文档——这是租户隔离，不是我不会装懂。"
+  ].join("\n");
+}
+
+function compose(tid, query, hits) {
+  const t = TENANTS[tid];
+  const cites = hits.map((h) => h.t).join("、");
+  const body = hits.map((h, i) => `${i + 1}. ${h.x}`).join("\n");
+  return `按我知识库里的「${cites}」直接答，不编库外细节。\n\n${body}\n\n——${t.name}｜仅使用本博主私有库｜引用 ${hits.length} 条`;
+}
+
+function answer(tid, query) {
+  const hits = retrieve(tid, query);
+  const text = hits.length ? compose(tid, query, hits) : refuse(tid);
+  const leaked = leakScan(text, tid);
+  return { text, hits, leaked, isolated: leaked.length === 0 };
+}
+
+function el(id) { return document.getElementById(id); }
+
+function addBubble(tid, role, text, extra) {
+  const box = el("chat-" + tid);
+  const b = document.createElement("div");
+  b.className = "bubble " + (role === "me" ? "me" : "bot");
+  b.textContent = text;
+  box.appendChild(b);
+  if (extra) {
+    const m = document.createElement("div");
+    m.className = "meta";
+    m.textContent = extra;
+    box.appendChild(m);
+  }
+  box.scrollTop = box.scrollHeight;
+  return b;
+}
+
+function setCredits(tid) {
+  el("credit-" + tid).textContent = state.credits[tid] + " 次";
+}
+
+function logLine(html) {
+  const log = el("lab-log");
+  const d = document.createElement("div");
+  d.innerHTML = html;
+  log.appendChild(d);
+  log.scrollTop = log.scrollHeight;
+}
+
+async function streamInto(node, text, fast, ms) {
+  node.textContent = "";
+  const caret = document.createElement("span");
+  caret.className = "caret";
+  node.appendChild(caret);
+  const delay = ms == null ? 8 : ms;
+  for (const ch of text) {
+    caret.insertAdjacentText("beforebegin", ch);
+    const box = node.parentElement;
+    if (box) box.scrollTop = box.scrollHeight;
+    if (!fast) await new Promise((r) => setTimeout(r, ch === "\n" ? delay * 2 : delay));
+  }
+  caret.remove();
+}
+
+async function ask(tid, query, opts = {}) {
+  query = String(query || "").trim();
+  if (!query || state.streaming[tid]) return null;
+  if (state.credits[tid] <= 0) {
+    addBubble(tid, "bot", "次数已用完。开通会员套餐后继续（生产接微信支付 JSAPI；本验收件点右侧「补 10 次」）。");
+    return { blocked: "no-credit" };
+  }
+  state.streaming[tid] = true;
+  if (!opts.silentUser) addBubble(tid, "me", query);
+  state.credits[tid] -= 1;
+  setCredits(tid);
+  const res = answer(tid, query);
+  if (opts.short) {
+    res.text = res.hits.length
+      ? `命中「${res.hits[0].t}」。\n${res.hits[0].x.slice(0, 72)}${res.hits[0].x.length > 72 ? "…" : ""}`
+      : refuse(tid);
+  }
+  const node = addBubble(tid, "bot", "");
+  await streamInto(node, res.text, !!opts.fast, opts.streamMs);
+  const extra = res.hits.length
+    ? `扣 1 次 · 命中 ${res.hits.length} 条私有文档 · 泄漏雷达 ${res.isolated ? "未检出对方库" : "异常"}`
+    : `扣 1 次 · 库内无命中 · 已拒绝越权作答 · 泄漏雷达 ${res.isolated ? "干净" : "异常"}`;
+  const m = document.createElement("div");
+  m.className = "meta";
+  m.textContent = extra;
+  node.after(m);
+  state.streaming[tid] = false;
+  return res;
+}
+
+const PRESETS = [
+  { id: "t1", q: "个体户怎么用对公账户发工资？", expect: { lin: "refuse", chen: "hit" }, title: "财税题打两边", desc: "林晚应拒绝；陈衡应引用对公/工资文档。" },
+  { id: "t2", q: "斯坦福CS硕士文书怎么写？", expect: { lin: "hit", chen: "refuse" }, title: "留学题打两边", desc: "陈衡应拒绝；林晚应引用SOP/选校。" },
+  { id: "t3", q: "美国W-2收入在中国怎么报？", expect: { lin: "refuse", chen: "hit" }, title: "W-2跨境所得", desc: "只允许出现在陈衡库。林晚不得提到汇算/专票。" }
+];
+
+function judge(tid, expect, res) {
+  if (!res || res.blocked) return false;
+  if (expect === "hit") return res.hits.length > 0 && res.isolated;
+  return res.hits.length === 0 && res.isolated;
+}
+
+function setBadge(id, pass) {
+  const b = el("badge-" + id);
+  b.className = "badge " + (pass ? "pass" : "fail");
+  b.textContent = pass ? "通过" : "失败";
+}
+
+async function runLab(customQ) {
+  el("lab-log").textContent = "";
+  const suite = customQ
+    ? [{ id: "tx", q: customQ, expect: { lin: "any", chen: "any" }, title: "自定义同一句", desc: "只验泄漏：两边答案都不得出现对方独占术语。" }]
+    : PRESETS;
+
+  logLine(`<span class="dim">开始验收 · 同一句分别打入两个租户 · 中间层先扣次再检索</span>`);
+  for (const t of suite) {
+    logLine(`<span class="dim">▶ ${t.title}｜「${t.q}」</span>`);
+    const a = await ask("lin", t.q, { fast: true });
+    const b = await ask("chen", t.q, { fast: true });
+    let pass;
+    if (t.expect.lin === "any") {
+      pass = a && b && a.isolated && b.isolated;
+    } else {
+      pass = judge("lin", t.expect.lin, a) && judge("chen", t.expect.chen, b);
+    }
+    if (t.id !== "tx") setBadge(t.id, pass);
+    logLine(pass
+      ? `<span class="ok">通过 · 林晚 ${a.hits.length ? "命中" : "拒绝"} · 陈衡 ${b.hits.length ? "命中" : "拒绝"} · 双边泄漏雷达干净</span>`
+      : `<span class="bad">失败 · 请看对话气泡。隔离或命中方向不符合预期。</span>`);
+  }
+  if (!customQ) {
+    const all = PRESETS.every((t) => el("badge-" + t.id).classList.contains("pass"));
+    el("hero-stamp").textContent = all ? "三项隔离验收已全部通过" : "还有未通过项，先看右侧日志";
+    el("hero-stamp").style.color = all ? "#3ee08a" : "#e2b57a";
+  }
+}
+
+function renderDocs() {
+  for (const tid of ["lin", "chen"]) {
+    const box = el("docs-" + tid);
+    box.innerHTML = TENANTS[tid].docs.map((d) => `<div class="doc"><b>${d.t}</b>${d.x}</div>`).join("");
+  }
+}
+
+function bindPhone(tid) {
+  el("form-" + tid).addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = el("input-" + tid);
+    const q = input.value;
+    input.value = "";
+    ask(tid, q);
+  });
+}
+
+function greet() {
+  addBubble("lin", "bot", "我是林晚。只根据我的留学知识库回答。你可以把同一句话丢给隔壁陈衡，看我们会不会串库。");
+  addBubble("chen", "bot", "我是陈衡。只根据我的财税知识库回答。库外的问题我会明确拒绝，不会去「帮忙编」。");
+}
+
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function say(text) {
+  const c = el("caption");
+  if (c) c.textContent = text;
+}
+
+function resetDemo() {
+  state.credits.lin = 10;
+  state.credits.chen = 10;
+  state.streaming.lin = false;
+  state.streaming.chen = false;
+  setCredits("lin");
+  setCredits("chen");
+  el("chat-lin").innerHTML = "";
+  el("chat-chen").innerHTML = "";
+  greet();
+  PRESETS.forEach((t) => {
+    const b = el("badge-" + t.id);
+    b.className = "badge wait";
+    b.textContent = "待测";
+  });
+  el("lab-log").textContent = "";
+  el("hero-stamp").textContent = "正在自动演示隔离。";
+  el("hero-stamp").style.color = "#e2b57a";
+}
+
+function focusPhone(tid) {
+  const lin = el("col-lin");
+  const chen = el("col-chen");
+  if (lin) lin.classList.toggle("focus", tid === "lin");
+  if (chen) chen.classList.toggle("focus", tid === "chen");
+  const col = el("col-" + tid);
+  if (col && window.innerWidth < 1180) {
+    col.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+let autoRunning = false;
+
+async function runAuto() {
+  if (autoRunning) return;
+  autoRunning = true;
+  document.body.classList.add("autoplaying");
+  const gate = el("gate");
+  if (gate) gate.classList.add("hidden");
+  const replay = el("btn-replay");
+  if (replay) replay.hidden = true;
+  resetDemo();
+  say("同一句话，先打进林晚，再打进陈衡。看会不会串库。");
+  focusPhone("lin");
+  await sleep(900);
+
+  for (const t of PRESETS) {
+    say(t.title + "：「" + t.q + "」");
+    logLine(`<span class="dim">▶ ${t.title}｜「${t.q}」</span>`);
+    await sleep(500);
+    focusPhone("lin");
+    const a = await ask("lin", t.q, { short: true, streamMs: 16 });
+    await sleep(420);
+    focusPhone("chen");
+    const b = await ask("chen", t.q, { short: true, streamMs: 16 });
+    const pass = judge("lin", t.expect.lin, a) && judge("chen", t.expect.chen, b);
+    setBadge(t.id, pass);
+    logLine(pass
+      ? `<span class="ok">通过 · 林晚 ${a.hits.length ? "命中自己的库" : "拒绝"} · 陈衡 ${b.hits.length ? "命中自己的库" : "拒绝"}</span>`
+      : `<span class="bad">失败 · 看两边气泡</span>`);
+    say(pass
+      ? `这项过了：林晚${a.hits.length ? "只引用留学库" : "拒绝越权"}，陈衡${b.hits.length ? "只引用财税库" : "拒绝越权"}。`
+      : "这项没对上，看气泡。");
+    await sleep(800);
+  }
+
+  const lin = el("col-lin");
+  const chen = el("col-chen");
+  if (lin) lin.classList.remove("focus");
+  if (chen) chen.classList.remove("focus");
+  const all = PRESETS.every((t) => el("badge-" + t.id).classList.contains("pass"));
+  el("hero-stamp").textContent = all ? "三项隔离验收已全部通过" : "还有未通过项，先看气泡";
+  el("hero-stamp").style.color = all ? "#3ee08a" : "#e2b57a";
+  say(all ? "播完了。点「再播一遍」可重来。" : "播完了，有失败项。");
+  document.body.classList.remove("autoplaying");
+  autoRunning = false;
+  if (replay) replay.hidden = false;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (/MicroMessenger/i.test(navigator.userAgent)) {
+    document.body.classList.add("wx");
+  }
+  renderDocs();
+  bindPhone("lin");
+  bindPhone("chen");
+  setCredits("lin");
+  setCredits("chen");
+  greet();
+  el("btn-lab").addEventListener("click", () => runLab());
+  el("btn-custom").addEventListener("click", () => {
+    const q = el("probe").value.trim();
+    if (!q) return;
+    runLab(q);
+  });
+  el("btn-refill-lin").addEventListener("click", () => { state.credits.lin += 10; setCredits("lin"); });
+  el("btn-refill-chen").addEventListener("click", () => { state.credits.chen += 10; setCredits("chen"); });
+  el("btn-play").addEventListener("click", () => { runAuto(); });
+  el("btn-replay").addEventListener("click", () => { runAuto(); });
+  PRESETS.forEach((t) => {
+    el("q-" + t.id).textContent = t.q;
+  });
+  if (location.protocol === "file:") {
+    say("本地文件微信打不开。要用 https 公网链接。");
+  }
+});
+
+  </script>
+</body>
+</html>

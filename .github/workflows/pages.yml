@@ -34,6 +34,11 @@ jobs:
           cp web/compare.html _site/compare.html
           cp web/delivery-preview.html _site/delivery-preview.html
           cp web/easy.html _site/easy.html
+          mkdir -p _site/youxing
+          cp web/youxing.html _site/youxing.html
+          cp web/youxing/index.html _site/youxing/index.html
+          cp web/youxing/app.css _site/youxing/app.css
+          cp web/youxing/app.js _site/youxing/app.js
           mkdir -p _site/packs/vendor_security_unblock
           cp packs/vendor_security_unblock/*.md _site/packs/vendor_security_unblock/ 2>/dev/null || true
           cp -r assets _site/assets 2>/dev/null || true

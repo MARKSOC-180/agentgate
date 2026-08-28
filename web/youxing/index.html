@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>优行AI · 自动演示 · 双博主隔离验收</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div id="gate" class="gate">
+    <div class="gate-card">
+      <div class="mark">优</div>
+      <h2>同一句话，打进两个博主</h2>
+      <p>自动演示隔离：留学博主答不了财税，财税博主答不了留学。微信请先点一下开始。</p>
+      <button class="btn-gold" id="btn-play" type="button">播放自动演示</button>
+    </div>
+  </div>
+  <div class="noise"></div>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">优</div>
+        <div>
+          <h1>优行AI · 博主分身</h1>
+          <p>给甲方的现场验收件 · 赵家铭交付 · 不是 PPT</p>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="pill">流式对话</span>
+        <span class="pill">多商户隔离</span>
+        <span class="pill">次数扣费</span>
+        <span class="pill">生产接 Dify / 微信支付</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="kicker">Eleduck 需求对位</div>
+        <h2>同一句话，打进两个博主。<em>不串库，才叫 SaaS。</em></h2>
+        <p class="lead">
+          你要的不是「我会做小程序」。你要的是：粉丝付费问、博主私有知识库、数据物理逻辑隔离、扣次后再转发模型。
+          下面两台真机并行，点一次「跑隔离验收」，三项测试自动打两边。
+        </p>
+        <div class="arch">
+          <span>微信小程序壳</span>
+          <span>→</span>
+          <span>中间层 <b>租户 + 扣次</b></span>
+          <span>→</span>
+          <span>检索核 / 生产换 <b>Dify Chat API</b></span>
+        </div>
+        <div class="actions">
+          <button class="btn-gold" id="btn-lab" type="button">跑三项隔离验收</button>
+          <button class="btn-gold" id="btn-replay" type="button" hidden>再播一遍</button>
+          <button class="btn-ghost" id="btn-refill-lin" type="button">林晚 +10 次</button>
+          <button class="btn-ghost" id="btn-refill-chen" type="button">陈衡 +10 次</button>
+        </div>
+        <p class="lead" id="hero-stamp" style="margin-top:14px;color:#e2b57a">微信里先点播放，自动跑完三项。</p>
+        <p class="caption" id="caption">等待播放</p>
+      </div>
+      <aside class="card report">
+        <div class="kicker">你会看见什么</div>
+        <ol>
+          <li>林晚只懂留学文书，陈衡只懂个体财税。</li>
+          <li>问工资公户：林晚拒绝，陈衡引用他自己的文档。</li>
+          <li>问斯坦福 SOP：反过来。泄漏雷达扫描对方独占术语。</li>
+          <li>每句扣 1 次。次数见手机右上角。</li>
+          <li>本页可离线点。生产把检索核换成你的 Dify，支付走你的商户号。</li>
+        </ol>
+      </aside>
+    </section>
+
+    <section class="stage">
+      <div class="phone-col" id="col-lin">
+        <div class="who"><span>粉丝端 · 博主 A</span><span class="credits" id="credit-lin">10 次</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="wx-bar"><span>9:41</span><span class="capsule"><i>···</i><i>○</i></span></div>
+            <div class="nav">
+              <div class="back">‹</div>
+              <div>
+                <div class="title">林晚</div>
+                <div class="sub">留学规划 · ¥29.9/10次 · 私有库</div>
+              </div>
+            </div>
+            <div class="chat" id="chat-lin"></div>
+            <form class="composer" id="form-lin">
+              <input id="input-lin" maxlength="80" placeholder="问林晚，例如：文书怎么写" />
+              <button class="send" type="submit">发送</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lab">
+        <h3>甲方验收台</h3>
+        <p class="hint">输入任意一句，同时打进两个租户。比看代码更快：看会不会说对方的话。</p>
+        <input class="probe" id="probe" placeholder="自定义同一句，例如：怎么开专票？" />
+        <button class="btn-green" id="btn-custom" type="button" style="width:100%">用这句打两边</button>
+        <div class="tests">
+          <div class="test">
+            <div class="row"><b>1. 财税题</b><span class="badge wait" id="badge-t1">待测</span></div>
+            <small id="q-t1"></small>
+          </div>
+          <div class="test">
+            <div class="row"><b>2. 留学题</b><span class="badge wait" id="badge-t2">待测</span></div>
+            <small id="q-t2"></small>
+          </div>
+          <div class="test">
+            <div class="row"><b>3. W-2</b><span class="badge wait" id="badge-t3">待测</span></div>
+            <small id="q-t3"></small>
+          </div>
+        </div>
+        <div class="log" id="lab-log">日志空着。点左上角金色按钮。</div>
+      </aside>
+
+      <div class="phone-col" id="col-chen">
+        <div class="who"><span>粉丝端 · 博主 B</span><span class="credits" id="credit-chen">10 次</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="wx-bar"><span>9:41</span><span class="capsule"><i>···</i><i>○</i></span></div>
+            <div class="nav">
+              <div class="back">‹</div>
+              <div>
+                <div class="title">陈衡</div>
+                <div class="sub">个体财税 · ¥39.9/10次 · 私有库</div>
+              </div>
+            </div>
+            <div class="chat" id="chat-chen"></div>
+            <form class="composer" id="form-chen">
+              <input id="input-chen" maxlength="80" placeholder="问陈衡，例如：公户怎么发工资" />
+              <button class="send" type="submit">发送</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin">
+      <div class="card">
+        <div class="kicker">博主后台 · 林晚能看见的文档</div>
+        <p class="lead" style="margin-top:0">陈衡登录后看不到这些。生产对接 Dify Dataset API，按 app_id 隔离。</p>
+        <div id="docs-lin"></div>
+      </div>
+      <div class="card">
+        <div class="kicker">博主后台 · 陈衡能看见的文档</div>
+        <p class="lead" style="margin-top:0">林晚登录后看不到这些。中间层永不把 A 的 dataset_id 传给 B 的会话。</p>
+        <div id="docs-chen"></div>
+      </div>
+    </section>
+
+    <p class="foot">
+      验收范围对位电鸭帖「优行AI博主智能体」：小程序用户端流式对话、会员次数、多商户知识库隔离、Dify 二次对接位。
+      本页是可点核，检索在浏览器内完成，保证现场不断网也能测隔离。生产环境替换为 Dify Chat/Dataset API + 微信 JSAPI 支付 + 你的小程序主体。
+      报价与付款不在本页承诺。交付人：赵家铭 · 3615199893@qq.com
+    </p>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
