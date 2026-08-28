@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>私域分身工作台 · 企微侧边栏验收</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="rail" aria-label="主菜单">
+      <div class="logo">晚</div>
+      <button class="navbtn on" data-view="bench" type="button">会话</button>
+      <button class="navbtn" data-view="queue" type="button">队列<span class="dot" id="qdot"></span></button>
+      <button class="navbtn" data-view="admin" type="button">后台</button>
+      <button class="navbtn" data-view="debug" type="button">调试</button>
+      <button class="navbtn" data-view="risk" type="button">风控</button>
+    </nav>
+
+    <div class="stage">
+    <main id="view-bench" class="view is-on">
+      <section class="wx" aria-label="企微会话">
+        <header class="wx-top">
+          <div>
+            <b id="wx-name">陈小舟</b>
+            <small id="wx-meta">外部客户 · 会话存档已开启</small>
+          </div>
+          <span class="tag" id="wx-stage">意向</span>
+        </header>
+        <p class="archive-tip">双方开启会话存档，消息将被存档。此提示不可隐藏。</p>
+        <div class="who" id="who"></div>
+        <div class="wx-thread" id="thread"></div>
+        <form class="wx-compose" id="sim-form">
+          <input id="sim-in" maxlength="120" placeholder="模拟客户发来一条（文字）" />
+          <button class="ghost" id="btn-voice" type="button">语音条</button>
+          <button class="ghost" id="btn-pay" type="button">付款事件</button>
+          <button type="submit">客户发送</button>
+        </form>
+      </section>
+
+      <aside class="ime" aria-label="AI输入法侧边栏">
+        <header class="ime-top">
+          <div>
+            <b>分身键</b>
+            <small id="ime-clone">成交分身 · 人在环</small>
+          </div>
+          <span class="conf" id="conf-pill">—</span>
+        </header>
+        <p class="hint" id="faq-hint" hidden></p>
+        <label class="sr">草稿</label>
+        <textarea id="draft" rows="7" placeholder="草稿在此。发送必须点下面的按钮。"></textarea>
+        <div class="tone">
+          <span>语气</span>
+          <input type="range" id="tone" min="0" max="100" value="62" />
+          <em id="tone-lab">稳</em>
+        </div>
+        <div class="btns">
+          <button class="send" id="btn-send" type="button">发送</button>
+          <button id="btn-rewrite" type="button">重写</button>
+          <button id="btn-take" type="button">接管</button>
+        </div>
+        <p class="cite" id="cite"></p>
+        <div class="search">
+          <input id="gold" placeholder="话术快搜：金句原文，不经 AI" />
+          <div id="gold-list"></div>
+        </div>
+        <p class="lock">没有「一键全发」。每条都要人点。自动外发未实现，也不会做。</p>
+      </aside>
+    </main>
+
+    <main id="view-queue" class="view" hidden>
+      <header class="pageh">
+        <h1>队列速闪</h1>
+        <p>从上往下点发送。红条必须手写。合并仅限同一客户连续消息。</p>
+      </header>
+      <div class="filters">
+        <button type="button" class="chip on" data-filter="all">全部未回</button>
+        <button type="button" class="chip" data-filter="hot">意向高</button>
+      </div>
+      <div id="queue" class="queue"></div>
+    </main>
+
+    <main id="view-admin" class="view" hidden>
+      <header class="pageh">
+        <h1>Web 后台</h1>
+        <p>双库隔离 · 人格底层 · 子账号。语料不跨博主。</p>
+      </header>
+      <div class="grid2">
+        <section class="card">
+          <h2>成交分身库</h2>
+          <div id="kb-close"></div>
+        </section>
+        <section class="card">
+          <h2>交付分身库</h2>
+          <div id="kb-deliver"></div>
+        </section>
+      </div>
+      <section class="card persona">
+        <h2>人格底层（共享）</h2>
+        <p id="persona-box"></p>
+        <p class="muted">子账号：苏晚（博主）· 助理可配库不可改发送审计。</p>
+      </section>
+    </main>
+
+    <main id="view-debug" class="view" hidden>
+      <header class="pageh">
+        <h1>调试台</h1>
+        <p>同一句，失恋第 3 天 vs 第 30 天。一对一生成，不是模板。</p>
+      </header>
+      <input class="probe" id="dbg-q" value="我想复合" />
+      <div class="grid2">
+        <section class="card" id="dbg-a"></section>
+        <section class="card" id="dbg-b"></section>
+      </div>
+    </main>
+
+    <main id="view-risk" class="view" hidden>
+      <header class="pageh">
+        <h1>风控与审计</h1>
+        <p>给你们对比用：这页证明人始终在环。外挂接口清单为空。</p>
+      </header>
+      <ul class="rules">
+        <li class="ok">发送 = 员工点按钮，消息记在员工会话</li>
+        <li class="ok">队列逐条确认，无「一键全发」</li>
+        <li class="ok">会话存档提示可见，未伪造关闭</li>
+        <li class="ok">禁说词拦截：保证复合 / 疗效 / 自动发送</li>
+        <li class="bad">未实现：协议号、RPA 群发、绕过客户端发送</li>
+      </ul>
+      <div class="logwrap">
+      <table class="log">
+        <thead><tr><th>时间</th><th>客户</th><th>动作</th><th>人</th></tr></thead>
+        <tbody id="audit"></tbody>
+      </table>
+      </div>
+    </main>
+    </div>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
